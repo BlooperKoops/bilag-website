@@ -2,121 +2,111 @@ const btn=document.querySelector(".menu-toggle");
 const nav=document.querySelector(".nav-list");
 if(btn&&nav){
   btn.addEventListener("click",()=>{const open=nav.classList.toggle("open");btn.setAttribute("aria-expanded",String(open));});
-  nav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("open");btn.setAttribute("aria-expanded","false");}));
+  nav.querySelectorAll("a").forEach((a)=>a.addEventListener("click",()=>{nav.classList.remove("open");btn.setAttribute("aria-expanded","false");}));
 }
 
-document.querySelectorAll(".nav-dropdown .dropdown-toggle").forEach((toggle)=>{
-  toggle.addEventListener("click",(e)=>{
-    e.preventDefault();
-    const parent=toggle.closest(".nav-dropdown");
-    if(!parent) return;
-    const willOpen=!parent.classList.contains("open");
-    document.querySelectorAll(".nav-dropdown.open").forEach((item)=>{
-      if(item!==parent){
-        item.classList.remove("open");
-        const btn=item.querySelector(".dropdown-toggle");
-        if(btn) btn.setAttribute("aria-expanded","false");
-      }
-    });
-    parent.classList.toggle("open",willOpen);
-    toggle.setAttribute("aria-expanded",String(willOpen));
-  });
-});
+const toRad=(d)=>d*Math.PI/180;
+const distanceKm=(a,b)=>{
+  const R=6371;
+  const dLat=toRad(b.lat-a.lat);
+  const dLng=toRad(b.lng-a.lng);
+  const aa=Math.sin(dLat/2)**2+Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(aa));
+};
+const initials=(name)=>name.split(" ").map((n)=>n[0]).slice(0,2).join("").toUpperCase();
+const avatarData=(name)=>{
+  const label=initials(name)||"BL";
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23964fe0'/><stop offset='100%' stop-color='%23611db0'/></linearGradient></defs><rect width='96' height='96' rx='18' fill='%23f2e6ff'/><circle cx='48' cy='34' r='16' fill='url(%23g)'/><path d='M16 82c0-14 14-26 32-26s32 12 32 26' fill='url(%23g)'/><text x='50%' y='90%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='11' font-weight='700' fill='%23611db0'>${label}</text></svg>`;
+  return `data:image/svg+xml;utf8,${svg}`;
+};
 
-const mapElement=document.getElementById("uk-map");
-if(mapElement){
-  const state={
-    members:[
-      {name:"Prof Caroline Gordon",role:"Founding and Clinical Leadership",hospital:"University Hospitals Birmingham",city:"Birmingham",lat:52.4862,lng:-1.8904,photo:""},
-      {name:"Prof David Isenberg",role:"Senior Advisor",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,photo:""},
-      {name:"Prof Ed Vital",role:"BILAG Chair",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,photo:""},
-      {name:"Dr Jane Hollis",role:"Trials Lead",hospital:"Manchester Royal Infirmary",city:"Manchester",lat:53.4808,lng:-2.2426,photo:""},
-      {name:"Dr Alex Dunn",role:"Education Lead",hospital:"Royal Victoria Infirmary",city:"Newcastle",lat:54.9783,lng:-1.6178,photo:""},
-      {name:"Dr Sarah Blake",role:"Biologics Register Team",hospital:"University Hospital Southampton",city:"Southampton",lat:50.9097,lng:-1.4044,photo:""},
-      {name:"Dr Moira Kelly",role:"Clinical Network Member",hospital:"Queen Elizabeth University Hospital",city:"Glasgow",lat:55.8642,lng:-4.2518,photo:""},
-      {name:"Dr Ciaran Byrne",role:"Collaborative Research Member",hospital:"Belfast City Hospital",city:"Belfast",lat:54.5973,lng:-5.9301,photo:""}
-    ],
-    userLocation:null
-  };
+const geocodeAddress=async(address)=>{
+  const url=`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb&q=${encodeURIComponent(address)}`;
+  const res=await fetch(url,{headers:{"Accept":"application/json"}});
+  if(!res.ok) throw new Error("Geocoding service unavailable");
+  const data=await res.json();
+  if(!data.length) throw new Error("Location not found");
+  return {lat:Number(data[0].lat),lng:Number(data[0].lon),label:data[0].display_name};
+};
 
-  const BOUNDS={minLat:49.8,maxLat:59.6,minLng:-8.8,maxLng:2.2};
+const ensureLeaflet=()=>typeof window.L!=="undefined";
+
+const initMemberMap=()=>{
+  const mapElement=document.getElementById("uk-map");
+  if(!mapElement) return;
+
+  const fallbackMembers=[
+    {name:"Prof Caroline Gordon",role:"Founding and Clinical Leadership",hospital:"University Hospitals Birmingham",city:"Birmingham",lat:52.4862,lng:-1.8904,photo:""},
+    {name:"Prof David Isenberg",role:"Senior Advisor",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,photo:""},
+    {name:"Prof Ed Vital",role:"BILAG Chair",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,photo:""},
+    {name:"Dr Jane Hollis",role:"Trials Lead",hospital:"Manchester Royal Infirmary",city:"Manchester",lat:53.4808,lng:-2.2426,photo:""},
+    {name:"Dr Alex Dunn",role:"Education Lead",hospital:"Royal Victoria Infirmary",city:"Newcastle",lat:54.9783,lng:-1.6178,photo:""},
+    {name:"Dr Sarah Blake",role:"Biologics Register Team",hospital:"University Hospital Southampton",city:"Southampton",lat:50.9097,lng:-1.4044,photo:""},
+    {name:"Dr Moira Kelly",role:"Clinical Network Member",hospital:"Queen Elizabeth University Hospital",city:"Glasgow",lat:55.8642,lng:-4.2518,photo:""},
+    {name:"Dr Ciaran Byrne",role:"Collaborative Research Member",hospital:"Belfast City Hospital",city:"Belfast",lat:54.5973,lng:-5.9301,photo:""}
+  ];
+
+  const state={members:[...fallbackMembers],userLocation:null};
   const form=document.getElementById("expert-search-form");
   const addressInput=document.getElementById("search-address");
   const radiusSelect=document.getElementById("search-radius");
   const status=document.getElementById("search-status");
   const results=document.getElementById("expert-results");
-  const markers=document.getElementById("map-markers");
-  const hoverCard=document.getElementById("map-hover-card");
-  const fileInput=document.getElementById("member-file");
 
-  const toRad=(d)=>d*Math.PI/180;
-  const distanceKm=(a,b)=>{
-    const R=6371;
-    const dLat=toRad(b.lat-a.lat);
-    const dLng=toRad(b.lng-a.lng);
-    const aa=Math.sin(dLat/2)**2+Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLng/2)**2;
-    return 2*R*Math.asin(Math.sqrt(aa));
-  };
-  const initials=(name)=>name.split(" ").map(n=>n[0]).slice(0,2).join("").toUpperCase();
-  const avatarData=(name)=>{
-    const label=initials(name)||"BL";
-    const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%238e47d6'/><stop offset='100%' stop-color='%235f179f'/></linearGradient></defs><rect width='96' height='96' fill='url(%23g)'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='32' font-weight='700' fill='white'>${label}</text></svg>`;
-    return `data:image/svg+xml;utf8,${svg}`;
-  };
+  if(!ensureLeaflet()){
+    status.textContent="Map library failed to load. Please refresh the page.";
+    return;
+  }
 
-  const coordToPct=(lat,lng)=>{
-    const x=((lng-BOUNDS.minLng)/(BOUNDS.maxLng-BOUNDS.minLng))*100;
-    const y=(1-((lat-BOUNDS.minLat)/(BOUNDS.maxLat-BOUNDS.minLat)))*100;
-    return {x:Math.min(96,Math.max(4,x)),y:Math.min(96,Math.max(4,y))};
+  const map=L.map(mapElement,{zoomControl:true,scrollWheelZoom:true});
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    maxZoom:18,
+    attribution:'&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  map.fitBounds([[49.6,-8.8],[59.7,2.2]]);
+
+  const markersLayer=L.layerGroup().addTo(map);
+  let userMarker=null;
+
+  const popupHtml=(m)=>{
+    const avatar=m.photo||avatarData(m.name);
+    return `<div style="display:grid;grid-template-columns:40px 1fr;gap:.5rem;align-items:center;min-width:210px"><img src="${avatar}" alt="${m.name} avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #e6d4ff"><div><strong>${m.name}</strong><br><span>${m.hospital}</span><br><span style="color:#65557f">${m.city}</span></div></div>`;
   };
 
   const renderMap=(nearbyIds=new Set())=>{
-    markers.innerHTML="";
-    const hideHover=()=>{
-      if(!hoverCard) return;
-      hoverCard.classList.remove("visible");
-    };
-    const showHover=(member,pct)=>{
-      if(!hoverCard) return;
-      const avatar=member.photo||avatarData(member.name);
-      hoverCard.innerHTML=`<img src="${avatar}" alt="${member.name} avatar" /><div><h4>${member.name}</h4><p>${member.hospital}</p></div>`;
-      hoverCard.classList.add("visible");
-      const left=Math.min(73,Math.max(3,pct.x+2.2));
-      const top=Math.min(88,Math.max(4,pct.y-10));
-      hoverCard.style.left=`${left}%`;
-      hoverCard.style.top=`${top}%`;
-    };
-
+    markersLayer.clearLayers();
     state.members.forEach((m,idx)=>{
-      const pt=coordToPct(m.lat,m.lng);
-      const pin=document.createElement("button");
-      pin.type="button";
-      pin.className=`map-pin ${nearbyIds.has(idx)?"nearby":""}`;
-      pin.style.left=`${pt.x}%`;
-      pin.style.top=`${pt.y}%`;
-      pin.title=`${m.name} - ${m.hospital}`;
-      pin.setAttribute("aria-label",pin.title);
-      pin.addEventListener("mouseenter",()=>showHover(m,pt));
-      pin.addEventListener("mouseleave",hideHover);
-      pin.addEventListener("focus",()=>showHover(m,pt));
-      pin.addEventListener("blur",hideHover);
-      markers.appendChild(pin);
+      const color=nearbyIds.has(idx)?"#dd5f1a":"#7e2ec5";
+      const marker=L.circleMarker([m.lat,m.lng],{
+        radius:7,
+        color:"#ffffff",
+        weight:2,
+        fillColor:color,
+        fillOpacity:1
+      }).bindPopup(popupHtml(m)).bindTooltip(`${m.name} - ${m.hospital}`,{direction:"top"});
+      marker.on("mouseover",()=>marker.openPopup());
+      marker.on("mouseout",()=>marker.closePopup());
+      marker.addTo(markersLayer);
     });
-    markers.addEventListener("mouseleave",hideHover,{once:true});
+
+    if(userMarker){
+      map.removeLayer(userMarker);
+      userMarker=null;
+    }
     if(state.userLocation){
-      const userPt=coordToPct(state.userLocation.lat,state.userLocation.lng);
-      const userPin=document.createElement("div");
-      userPin.className="map-pin user";
-      userPin.style.left=`${userPt.x}%`;
-      userPin.style.top=`${userPt.y}%`;
-      userPin.title="Your searched location";
-      markers.appendChild(userPin);
+      userMarker=L.circleMarker([state.userLocation.lat,state.userLocation.lng],{
+        radius:7,
+        color:"#ffffff",
+        weight:2,
+        fillColor:"#12a66a",
+        fillOpacity:1
+      }).bindTooltip("Your searched location",{direction:"top"}).addTo(map);
     }
   };
 
   const renderResults=(rows)=>{
     if(!rows.length){
-      results.innerHTML="<p>No experts found in this radius. Try increasing to 100 km or 150 km.</p>";
+      results.innerHTML="<p>No members found in this radius. Try increasing to 100 km or 150 km.</p>";
       return;
     }
     results.innerHTML="";
@@ -130,15 +120,7 @@ if(mapElement){
       img.alt=`${m.name} profile`;
       img.loading="lazy";
       const copy=document.createElement("div");
-      const title=document.createElement("h4");
-      title.textContent=m.name;
-      const role=document.createElement("p");
-      role.textContent=`Role in BILAG: ${m.role}`;
-      const hosp=document.createElement("p");
-      hosp.textContent=`Hospital: ${m.hospital}`;
-      const city=document.createElement("p");
-      city.textContent=`Location: ${m.city}`;
-      copy.append(title,role,hosp,city);
+      copy.innerHTML=`<h4>${m.name}</h4><p>Role: ${m.role}</p><p>Hospital: ${m.hospital}</p><p>Location: ${m.city}</p>`;
       if(typeof item.distance==="number"){
         const dist=document.createElement("span");
         dist.className="distance-pill";
@@ -150,25 +132,51 @@ if(mapElement){
     });
   };
 
-  const geocodeAddress=async(address)=>{
-    const url=`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb&q=${encodeURIComponent(address)}`;
-    const res=await fetch(url,{headers:{"Accept":"application/json"}});
-    if(!res.ok) throw new Error("Geocoding service unavailable");
-    const data=await res.json();
-    if(!data.length) throw new Error("Location not found");
-    return {lat:Number(data[0].lat),lng:Number(data[0].lon),label:data[0].display_name};
+  const showDefault=()=>{
+    renderResults(state.members.map((member)=>({member})));
+    renderMap();
   };
 
-  const showDefault=()=>{
-    renderResults(state.members.map(m=>({member:m})));
-    renderMap();
+  const loadDefaultMembers=async()=>{
+    const withHonorific=(name)=>{
+      const n=(name||"").trim();
+      if(!n) return "Dr BILAG Member";
+      if(/^(dr|prof)\.?\s/i.test(n)) return n;
+      return `Dr ${n}`;
+    };
+
+    try{
+      const res=await fetch("./assets/bilag-members.json",{headers:{"Accept":"application/json"}});
+      if(!res.ok) throw new Error("members file not found");
+      const parsed=await res.json();
+      if(!Array.isArray(parsed)) throw new Error("invalid members format");
+      const clean=parsed.filter((p)=>
+        p&&typeof p.name==="string"&&typeof p.hospital==="string"&&typeof p.city==="string"&&
+        Number.isFinite(Number(p.lat))&&Number.isFinite(Number(p.lng))
+      ).map((p)=>({
+        name:withHonorific(p.name),
+        role:(()=>{const r=typeof p.role==="string"?p.role.trim():""; return (!r||/^bilag\s+member$/i.test(r))?"Member":r;})(),
+        hospital:p.hospital.trim(),
+        city:p.city.trim(),
+        lat:Number(p.lat),
+        lng:Number(p.lng),
+        photo:typeof p.photo==="string"?p.photo.trim():""
+      }));
+      if(clean.length){
+        state.members=clean;
+        status.textContent=`Loaded ${clean.length} members from the BILAG directory.`;
+      }
+    }catch(_err){
+      status.textContent="Using fallback sample members. Add assets/bilag-members.json for the full list.";
+    }
+    showDefault();
   };
 
   form.addEventListener("submit",async(e)=>{
     e.preventDefault();
     const address=addressInput.value.trim();
     if(!address) return;
-    status.textContent="Searching location and matching nearby experts...";
+    status.textContent="Searching location and matching nearby members...";
     status.style.color="";
     try{
       const loc=await geocodeAddress(address);
@@ -176,11 +184,12 @@ if(mapElement){
       const radius=Number(radiusSelect.value)||50;
       const nearby=state.members
         .map((member,idx)=>({member,idx,distance:distanceKm(state.userLocation,member)}))
-        .filter(item=>item.distance<=radius)
+        .filter((item)=>item.distance<=radius)
         .sort((a,b)=>a.distance-b.distance);
       renderResults(nearby);
-      renderMap(new Set(nearby.map(n=>n.idx)));
-      status.textContent=`Showing ${nearby.length} expert(s) within ${radius} km of ${loc.label}.`;
+      renderMap(new Set(nearby.map((n)=>n.idx)));
+      status.textContent=`Showing ${nearby.length} member(s) within ${radius} km of ${loc.label}.`;
+      map.flyTo([state.userLocation.lat,state.userLocation.lng],7,{duration:0.6});
     }catch(err){
       status.textContent=`Could not locate that address. Try a UK postcode or town. (${err.message})`;
       status.style.color="#b03a1b";
@@ -188,33 +197,151 @@ if(mapElement){
     }
   });
 
-  fileInput.addEventListener("change",async(e)=>{
-    const file=e.target.files&&e.target.files[0];
-    if(!file) return;
+  loadDefaultMembers();
+};
+
+const initTrialMap=()=>{
+  const mapElement=document.getElementById("uk-trial-map");
+  if(!mapElement) return;
+
+  const trialSites=[
+    {name:"FIRST Trial",phase:"Randomised controlled trial",status:"Recruiting",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,aim:"To evaluate first-line rituximab-based treatment pathways in active SLE.",criteria:"Adults with active SLE requiring systemic immunosuppressive escalation; standard safety screening required.",agents:"Rituximab-based regimen compared with current standard first-line escalation strategy."},
+    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University Hospitals Birmingham",city:"Birmingham",lat:52.4862,lng:-1.8904,aim:"To test biomarker-stratified treatment sequencing in moderate-to-severe lupus.",criteria:"Adults with serologically active SLE and disease features suitable for biologic treatment stratification.",agents:"Rituximab plus belimumab combination strategy versus biomarker-guided comparator arms."},
+    {name:"BEAT-LUPUS Follow-up",phase:"Translational follow-up",status:"Open to referral",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,aim:"To assess durability of B-cell directed response and relapse patterns after combination biologic therapy.",criteria:"Patients with prior biologic exposure and documented lupus activity trajectories for follow-up analysis.",agents:"Belimumab and rituximab pathway follow-up with translational biomarker profiling."},
+    {name:"Biologics Register Sub-study",phase:"Observational interventional",status:"Active",hospital:"Manchester University NHS Foundation Trust",city:"Manchester",lat:53.4808,lng:-2.2426,aim:"To compare biologic effectiveness and safety outcomes in real-world UK lupus cohorts.",criteria:"Patients enrolled in the BILAG Biologics Register with defined treatment and follow-up datasets.",agents:"Real-world biologic classes including rituximab and belimumab with protocol-defined outcome capture."},
+    {name:"Regional Lupus Trial Hub",phase:"Site preparation",status:"Opening soon",hospital:"Royal Victoria Infirmary",city:"Newcastle",lat:54.9783,lng:-1.6178,aim:"To expand regional recruitment into multicentre lupus interventional and translational studies.",criteria:"Adults with confirmed SLE suitable for screening into active BILAG-affiliated studies.",agents:"Agent selection aligned to currently active BILAG portfolio protocols at time of enrolment."},
+    {name:"South Coast SLE Trial Unit",phase:"Early phase",status:"Recruiting",hospital:"University Hospital Southampton",city:"Southampton",lat:50.9097,lng:-1.4044,aim:"To evaluate early-phase therapeutic approaches for immune modulation in systemic lupus.",criteria:"Adults with active SLE meeting protocol laboratory, organ involvement, and treatment-history criteria.",agents:"Protocol-dependent investigational immune-modulating agents under early-phase governance."},
+    {name:"Scottish Lupus Trial Node",phase:"Clinical studies",status:"Active",hospital:"Queen Elizabeth University Hospital",city:"Glasgow",lat:55.8642,lng:-4.2518,aim:"To support national trial access and harmonised disease activity measurement in Scottish centres.",criteria:"Patients with confirmed SLE eligible for active interventional or observational trial pathways.",agents:"Portfolio-dependent biologic and conventional immunosuppressive study regimens."},
+    {name:"Northern Ireland Collaboration Site",phase:"Registry-linked studies",status:"Active",hospital:"Belfast City Hospital",city:"Belfast",lat:54.5973,lng:-5.9301,aim:"To integrate registry and trial workflows for improved regional lupus trial participation.",criteria:"Adults with SLE under specialist care with consent for registry linkage and protocol screening.",agents:"Registry-linked therapeutic cohorts including biologic and standard-care comparators."}
+  ];
+
+  const state={sites:trialSites,userLocation:null};
+  const form=document.getElementById("trial-search-form");
+  const addressInput=document.getElementById("trial-search-address");
+  const radiusSelect=document.getElementById("trial-search-radius");
+  const status=document.getElementById("trial-search-status");
+  const results=document.getElementById("trial-results");
+  const summaries=document.getElementById("trial-summaries");
+
+  if(!ensureLeaflet()){
+    status.textContent="Map library failed to load. Please refresh the page.";
+    return;
+  }
+
+  const map=L.map(mapElement,{zoomControl:true,scrollWheelZoom:true});
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    maxZoom:18,
+    attribution:'&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  map.fitBounds([[49.6,-8.8],[59.7,2.2]]);
+
+  const markersLayer=L.layerGroup().addTo(map);
+  let userMarker=null;
+
+  const popupHtml=(site)=>`<div style="min-width:220px"><strong>${site.name}</strong><br><span>${site.hospital}</span><br><span style="color:#65557f">${site.city}</span><br><span style="color:#65557f">${site.status}</span></div>`;
+
+  const renderMap=(nearbyIds=new Set())=>{
+    markersLayer.clearLayers();
+    state.sites.forEach((site,idx)=>{
+      const color=nearbyIds.has(idx)?"#dd5f1a":"#7e2ec5";
+      const marker=L.circleMarker([site.lat,site.lng],{
+        radius:7,
+        color:"#ffffff",
+        weight:2,
+        fillColor:color,
+        fillOpacity:1
+      }).bindPopup(popupHtml(site)).bindTooltip(`${site.name} - ${site.hospital}`,{direction:"top"});
+      marker.on("mouseover",()=>marker.openPopup());
+      marker.on("mouseout",()=>marker.closePopup());
+      marker.addTo(markersLayer);
+    });
+
+    if(userMarker){
+      map.removeLayer(userMarker);
+      userMarker=null;
+    }
+    if(state.userLocation){
+      userMarker=L.circleMarker([state.userLocation.lat,state.userLocation.lng],{
+        radius:7,
+        color:"#ffffff",
+        weight:2,
+        fillColor:"#12a66a",
+        fillOpacity:1
+      }).bindTooltip("Your searched location",{direction:"top"}).addTo(map);
+    }
+  };
+
+  const renderResults=(rows)=>{
+    if(!rows.length){
+      results.innerHTML="<p>No trial sites found in this radius. Try increasing to 100 km or 150 km.</p>";
+      return;
+    }
+    results.innerHTML="";
+    rows.forEach((item)=>{
+      const site=item.site;
+      const card=document.createElement("article");
+      card.className="expert-item";
+      const img=document.createElement("img");
+      img.className="expert-avatar";
+      img.src=avatarData(site.name);
+      img.alt=`${site.name} icon`;
+      img.loading="lazy";
+      const copy=document.createElement("div");
+      copy.innerHTML=`<h4>${site.name}</h4><p>Study type: ${site.phase}</p><p>Status: ${site.status}</p><p>Hospital: ${site.hospital}</p><p>Location: ${site.city}</p><p>Aim: ${site.aim}</p><p>Recruitment: ${site.criteria}</p><p>Agents: ${site.agents}</p>`;
+      if(typeof item.distance==="number"){
+        const dist=document.createElement("span");
+        dist.className="distance-pill";
+        dist.textContent=`${item.distance.toFixed(1)} km away`;
+        copy.appendChild(dist);
+      }
+      card.append(img,copy);
+      results.appendChild(card);
+    });
+  };
+
+  const renderSummaries=()=>{
+    if(!summaries) return;
+    summaries.innerHTML="";
+    state.sites.forEach((site)=>{
+      const card=document.createElement("article");
+      card.className="card trial-summary";
+      card.innerHTML=`<h3>${site.name}</h3><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial agents:</strong> ${site.agents}</p>`;
+      summaries.appendChild(card);
+    });
+  };
+
+  form.addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    const address=addressInput.value.trim();
+    if(!address) return;
+    status.textContent="Searching location and matching nearby trial sites...";
+    status.style.color="";
     try{
-      const text=await file.text();
-      const parsed=JSON.parse(text);
-      if(!Array.isArray(parsed)) throw new Error("JSON must be an array");
-      const clean=parsed.filter(p=>
-        p&&typeof p.name==="string"&&typeof p.role==="string"&&typeof p.hospital==="string"&&
-        typeof p.city==="string"&&Number.isFinite(Number(p.lat))&&Number.isFinite(Number(p.lng))
-      ).map(p=>({
-        name:p.name.trim(),role:p.role.trim(),hospital:p.hospital.trim(),city:p.city.trim(),
-        lat:Number(p.lat),lng:Number(p.lng),photo:typeof p.photo==="string"?p.photo.trim():""
-      }));
-      if(!clean.length) throw new Error("No valid member records");
-      state.members=clean;
-      state.userLocation=null;
-      showDefault();
-      status.textContent=`Loaded ${clean.length} member locations from ${file.name}.`;
+      const loc=await geocodeAddress(address);
+      state.userLocation={lat:loc.lat,lng:loc.lng};
+      const radius=Number(radiusSelect.value)||50;
+      const nearby=state.sites
+        .map((site,idx)=>({site,idx,distance:distanceKm(state.userLocation,site)}))
+        .filter((item)=>item.distance<=radius)
+        .sort((a,b)=>a.distance-b.distance);
+      renderResults(nearby);
+      renderMap(new Set(nearby.map((n)=>n.idx)));
+      status.textContent=`Showing ${nearby.length} trial site(s) within ${radius} km of ${loc.label}.`;
+      map.flyTo([state.userLocation.lat,state.userLocation.lng],7,{duration:0.6});
     }catch(err){
-      status.textContent=`Upload failed: ${err.message}`;
+      status.textContent=`Could not locate that address. Try a UK postcode or town. (${err.message})`;
       status.style.color="#b03a1b";
+      renderMap();
     }
   });
 
-  showDefault();
-}
+  renderResults(state.sites.map((site)=>({site})));
+  renderSummaries();
+  renderMap();
+};
+
+initMemberMap();
+initTrialMap();
 
 const publicationList=document.getElementById("publication-list");
 if(publicationList){
