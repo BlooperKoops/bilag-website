@@ -340,5 +340,14 @@
     "lat": 53.4808,
     "lng": -2.2426,
     "photo": ""
+  },
+  {
+    "name": "Samuel Wood",
+    "role": "BILAG Member",
+    "hospital": "University of Leeds",
+    "city": "Leeds",
+    "lat": 53.8067,
+    "lng": -1.555,
+    "photo": ""
   }
 ]
