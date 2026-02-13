@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BILAG BR | BILAG Group</title>
+<title>BILAG Newsletter | BILAG Group</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css"></head><body>
@@ -27,35 +27,46 @@
   </div>
 </header>
 <main><section class="section"><div class="container">
-<p class="eyebrow">British Isles Lupus Assessment Group</p><h1>BILAG BR</h1>
+<p class="eyebrow">British Isles Lupus Assessment Group</p><h1>BILAG Newsletter</h1>
 
-<article class="card br-card">
-  <div class="br-layout">
-    <div class="br-copy">
-      <h3>BILAG Biologics Register (BILAG BR)</h3>
-      <p>The BILAG Biologics Register (BILAG BR) is a UK-wide real-world lupus cohort that supports long-term evaluation of biologic therapies, treatment patterns, and clinical outcomes in systemic lupus erythematosus.</p>
-      <p>It provides high-quality observational data to inform clinical practice, guideline development, and collaborative research.</p>
-      <p><a class="btn" href="https://sites.manchester.ac.uk/bilag/" target="_blank" rel="noopener noreferrer">Visit BILAG BR at University of Manchester</a></p>
-    </div>
-    <div class="br-logo-wrap">
-      <img src="./assets/Manchester Logo.png" alt="University of Manchester logo" class="br-logo">
-    </div>
-  </div>
+<article class="card">
+  <h3>About the Newsletter</h3>
+  <p>The BILAG newsletter shares updates on lupus research activity, trial opportunities, registry and biologics work, education/events, digital tool developments, and key group announcements.</p>
+  <p>Subscribers receive periodic summary emails highlighting new resources and upcoming opportunities relevant to clinicians, researchers, and collaborators.</p>
+  <p><a class="btn" href="./newsletter-post-template.html">Open Newsletter Post Template</a></p>
 </article>
 
 <div style="height:1rem"></div>
 
-<article class="card">
-  <h3>Applying for Data Use (Academic Work)</h3>
-  <p>Academic investigators interested in using BILAG BR data should follow this process:</p>
-  <ol>
-    <li>Prepare a short proposal outlining the research question, rationale, study design, variables required, and planned outputs.</li>
-    <li>Provide evidence of institutional sponsorship and local governance/ethics readiness where applicable.</li>
-    <li>Submit the request through the BILAG BR team via the University of Manchester BILAG page and contact route.</li>
-    <li>Data requests are reviewed by the relevant BILAG BR governance group for scientific merit, feasibility, and data protection compliance.</li>
-    <li>If approved, a data sharing agreement and analysis plan are completed before any data release.</li>
-  </ol>
-  <p class="meta-text">For current instructions and contacts, always use the official BILAG BR page.</p>
+<div class="cards two">
+  <article class="card">
+    <h3>Sign Up</h3>
+    <form id="newsletter-signup-form" class="contact-form" autocomplete="on">
+      <label>Full Name
+        <input id="newsletter-name" type="text" required>
+      </label>
+      <label>Email Address
+        <input id="newsletter-email" type="email" required>
+      </label>
+      <button type="submit" class="btn">Join Newsletter</button>
+    </form>
+    <p id="newsletter-signup-status" class="meta-text">Your details will be sent to the BILAG contact mailbox for addition to the newsletter list.</p>
+  </article>
+</div>
+
+<div style="height:1rem"></div>
+
+<article id="newsletter-admin-panel" class="card admin-only">
+  <h3>Admin Newsletter Archive Upload</h3>
+  <p>This section is restricted to website host and designated admins.</p>
+  <label class="upload-label">Upload newsletter file(s)
+    <input id="newsletter-upload" type="file" accept=".pdf,.doc,.docx,.txt" multiple>
+  </label>
+  <ul id="newsletter-list" class="newsletter-list">
+    <li class="meta-text">No newsletters uploaded yet.</li>
+  </ul>
+  <p class="meta-text">Uploaded files are browser-session based unless committed into the website repository.</p>
+  <p><button id="newsletter-admin-logout" type="button" class="btn btn-small">End Admin Session</button></p>
 </article>
 
 </div></section></main>

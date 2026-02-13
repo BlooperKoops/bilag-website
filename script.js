@@ -343,6 +343,82 @@ const initTrialMap=()=>{
 initMemberMap();
 initTrialMap();
 
+const initNewsletterPage=()=>{
+  const signupForm=document.getElementById("newsletter-signup-form");
+  const adminPanel=document.getElementById("newsletter-admin-panel");
+  const logoutBtn=document.getElementById("newsletter-admin-logout");
+  const uploadInput=document.getElementById("newsletter-upload");
+  const list=document.getElementById("newsletter-list");
+  const status=document.getElementById("newsletter-signup-status");
+  if(!signupForm||!status) return;
+
+  const ADMIN_STORAGE_KEY="bilag_newsletter_admin";
+  const ADMIN_ACCESS_CODE="BILAG-Admin-Upload";
+  const urlParams=new URLSearchParams(window.location.search);
+  let isAdmin=window.localStorage.getItem(ADMIN_STORAGE_KEY)==="1";
+
+  if(urlParams.get("admin")==="1"&&!isAdmin){
+    const entered=window.prompt("Admin access code");
+    if(entered===ADMIN_ACCESS_CODE){
+      isAdmin=true;
+      window.localStorage.setItem(ADMIN_STORAGE_KEY,"1");
+    }
+  }
+
+  if(adminPanel){
+    adminPanel.style.display=isAdmin?"block":"none";
+  }
+
+  signupForm.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const nameField=document.getElementById("newsletter-name");
+    const emailField=document.getElementById("newsletter-email");
+    const fullName=nameField?nameField.value.trim():"";
+    const email=emailField?emailField.value.trim():"";
+    if(!fullName||!email){
+      status.textContent="Please complete name and email to join the newsletter.";
+      status.style.color="#b03a1b";
+      return;
+    }
+    const subject=encodeURIComponent("BILAG Newsletter Signup");
+    const body=encodeURIComponent(`Please add the following person to the BILAG newsletter list:\n\nName: ${fullName}\nEmail: ${email}`);
+    window.location.href=`mailto:ContactBILAG@proton.me?subject=${subject}&body=${body}`;
+    status.textContent="Opening your email app to complete signup.";
+    status.style.color="";
+    signupForm.reset();
+  });
+
+  if(!isAdmin||!uploadInput||!list) return;
+
+  uploadInput.addEventListener("change",()=>{
+    const files=Array.from(uploadInput.files||[]);
+    if(!files.length) return;
+    const empty=list.querySelector(".meta-text");
+    if(empty) empty.remove();
+    files.forEach((file)=>{
+      const item=document.createElement("li");
+      const link=document.createElement("a");
+      link.href=URL.createObjectURL(file);
+      link.textContent=file.name;
+      link.target="_blank";
+      link.rel="noopener noreferrer";
+      link.download=file.name;
+      item.appendChild(link);
+      list.appendChild(item);
+    });
+    uploadInput.value="";
+  });
+
+  if(logoutBtn){
+    logoutBtn.addEventListener("click",()=>{
+      window.localStorage.removeItem(ADMIN_STORAGE_KEY);
+      window.location.href="./newsletter.html";
+    });
+  }
+};
+
+initNewsletterPage();
+
 const publicationList=document.getElementById("publication-list");
 if(publicationList){
   const publications=[{
