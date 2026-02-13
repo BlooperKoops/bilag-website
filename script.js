@@ -234,22 +234,27 @@ const initTrialMap=()=>{
   const mapElement=document.getElementById("uk-trial-map");
   if(!mapElement) return;
 
-  const trialSites=[
-    {name:"FIRST Trial",phase:"Randomised controlled trial",status:"Recruiting",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,aim:"To evaluate first-line rituximab-based treatment pathways in active SLE.",criteria:"Adults with active SLE requiring systemic immunosuppressive escalation; standard safety screening required.",agents:"Rituximab-based regimen compared with current standard first-line escalation strategy.",logo:"./assets/university-of-leeds.png",logoAlt:"University of Leeds"},
-    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,aim:"To test biomarker-stratified treatment sequencing in moderate-to-severe lupus.",criteria:"Adults with serologically active SLE and disease features suitable for biologic treatment stratification.",agents:"Rituximab plus belimumab combination strategy versus biomarker-guided comparator arms.",logo:"./assets/UCL Logo.png",logoAlt:"UCL"},
+  const activeTrials=[
+    {name:"FIRST Trial",phase:"Randomised controlled trial",status:"Recruiting",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,aim:"To evaluate first-line rituximab-based treatment pathways in active SLE.",criteria:"Adults with active SLE requiring systemic immunosuppressive escalation; standard safety screening required.",agents:"Rituximab-based regimen compared with current standard first-line escalation strategy.",logo:"./assets/university-of-leeds.png",logoAlt:"University of Leeds",locationLabel:"Coordinating centre"},
+    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,aim:"To test biomarker-stratified treatment sequencing in moderate-to-severe lupus.",criteria:"Adults with serologically active SLE and disease features suitable for biologic treatment stratification.",agents:"Rituximab plus belimumab combination strategy versus biomarker-guided comparator arms.",logo:"./assets/UCL Logo.png",logoAlt:"UCL",locationLabel:"Coordinating centre"}
+  ];
+
+  const regionalHubs=[
     {name:"Regional Lupus Trial Hub",phase:"Site preparation",status:"Opening soon",hospital:"Royal Victoria Infirmary",city:"Newcastle",lat:54.9783,lng:-1.6178,aim:"To expand regional recruitment into multicentre lupus interventional and translational studies.",criteria:"Adults with confirmed SLE suitable for screening into active BILAG-affiliated studies.",agents:"Agent selection aligned to currently active BILAG portfolio protocols at time of enrolment."},
     {name:"South Coast SLE Trial Unit",phase:"Early phase",status:"Recruiting",hospital:"University Hospital Southampton",city:"Southampton",lat:50.9097,lng:-1.4044,aim:"To evaluate early-phase therapeutic approaches for immune modulation in systemic lupus.",criteria:"Adults with active SLE meeting protocol laboratory, organ involvement, and treatment-history criteria.",agents:"Protocol-dependent investigational immune-modulating agents under early-phase governance."},
     {name:"Scottish Lupus Trial Node",phase:"Clinical studies",status:"Active",hospital:"Queen Elizabeth University Hospital",city:"Glasgow",lat:55.8642,lng:-4.2518,aim:"To support national trial access and harmonised disease activity measurement in Scottish centres.",criteria:"Patients with confirmed SLE eligible for active interventional or observational trial pathways.",agents:"Portfolio-dependent biologic and conventional immunosuppressive study regimens."},
     {name:"Northern Ireland Collaboration Site",phase:"Registry-linked studies",status:"Active",hospital:"Belfast City Hospital",city:"Belfast",lat:54.5973,lng:-5.9301,aim:"To integrate registry and trial workflows for improved regional lupus trial participation.",criteria:"Adults with SLE under specialist care with consent for registry linkage and protocol screening.",agents:"Registry-linked therapeutic cohorts including biologic and standard-care comparators."}
   ];
 
-  const state={sites:trialSites,userLocation:null};
+  const state={sites:[...activeTrials,...regionalHubs],activeTrials,regionalHubs,userLocation:null};
   const form=document.getElementById("trial-search-form");
   const addressInput=document.getElementById("trial-search-address");
   const radiusSelect=document.getElementById("trial-search-radius");
   const status=document.getElementById("trial-search-status");
   const results=document.getElementById("trial-results");
   const summaries=document.getElementById("trial-summaries");
+  const hubs=document.getElementById("trial-regional-hubs");
+  const centres=document.getElementById("trial-centres");
 
   if(!ensureLeaflet()){
     status.textContent="Map library failed to load. Please refresh the page.";
@@ -316,7 +321,7 @@ const initTrialMap=()=>{
       if(site.logo) img.classList.add("expert-avatar-logo");
       img.loading="lazy";
       const copy=document.createElement("div");
-      copy.innerHTML=`<h4>${site.name}</h4><p>Study type: ${site.phase}</p><p>Status: ${site.status}</p><p>Hospital: ${site.hospital}</p><p>Location: ${site.city}</p><p>Aim: ${site.aim}</p><p>Recruitment: ${site.criteria}</p><p>Agents: ${site.agents}</p>`;
+      copy.innerHTML=`<h4>${site.name}</h4><p>Study type: ${site.phase}</p><p>Status: ${site.status}</p><p>Hospital: ${site.hospital}</p><p>${site.locationLabel||"Location"}: ${site.city}</p><p>Aim: ${site.aim}</p><p>Recruitment: ${site.criteria}</p><p>Agents: ${site.agents}</p>`;
       if(typeof item.distance==="number"){
         const dist=document.createElement("span");
         dist.className="distance-pill";
@@ -331,7 +336,7 @@ const initTrialMap=()=>{
   const renderSummaries=()=>{
     if(!summaries) return;
     summaries.innerHTML="";
-    state.sites.forEach((site)=>{
+    state.activeTrials.forEach((site)=>{
       const card=document.createElement("article");
       card.className="card trial-summary";
       const summaryLogo=(site.logo)
@@ -340,6 +345,54 @@ const initTrialMap=()=>{
       card.innerHTML=`<h3 class="trial-title-row">${site.name}${summaryLogo?` ${summaryLogo}`:""}</h3><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial agents:</strong> ${site.agents}</p>`;
       summaries.appendChild(card);
     });
+  };
+
+  const renderRegionalHubs=()=>{
+    if(!hubs) return;
+    hubs.innerHTML="";
+    state.regionalHubs.forEach((site)=>{
+      const card=document.createElement("article");
+      card.className="card trial-summary";
+      card.innerHTML=`<h3>${site.name}</h3><p><strong>Status:</strong> ${site.status}</p><p><strong>Hospital:</strong> ${site.hospital}</p><p><strong>Location:</strong> ${site.city}</p><p><strong>Aim:</strong> ${site.aim}</p>`;
+      hubs.appendChild(card);
+    });
+  };
+
+  const renderCentres=async()=>{
+    if(!centres) return;
+    const fallback=Array.from(new Map(state.sites.map((s)=>[`${s.hospital}|${s.city}`,{hospital:s.hospital,city:s.city,count:1}])).values());
+    try{
+      const res=await fetch("./assets/bilag-members.json",{headers:{"Accept":"application/json"}});
+      if(!res.ok) throw new Error("members file not found");
+      const members=await res.json();
+      if(!Array.isArray(members)) throw new Error("invalid members format");
+      const grouped=new Map();
+      members.forEach((m)=>{
+        if(!m||typeof m.hospital!=="string"||typeof m.city!=="string") return;
+        const hospital=m.hospital.trim();
+        const city=m.city.trim();
+        if(!hospital||!city) return;
+        const key=`${hospital}|${city}`;
+        const prev=grouped.get(key);
+        grouped.set(key,{hospital,city,count:(prev?prev.count:0)+1});
+      });
+      const rows=Array.from(grouped.values()).sort((a,b)=>a.hospital.localeCompare(b.hospital));
+      centres.innerHTML="";
+      rows.forEach((row)=>{
+        const card=document.createElement("article");
+        card.className="card trial-summary";
+        card.innerHTML=`<h3>${row.hospital}</h3><p><strong>City:</strong> ${row.city}</p><p><strong>BILAG members at centre:</strong> ${row.count}</p><p><strong>Trial status:</strong> Active for clinical trial referral and network participation.</p>`;
+        centres.appendChild(card);
+      });
+    }catch(_err){
+      centres.innerHTML="";
+      fallback.forEach((row)=>{
+        const card=document.createElement("article");
+        card.className="card trial-summary";
+        card.innerHTML=`<h3>${row.hospital}</h3><p><strong>City:</strong> ${row.city}</p><p><strong>Trial status:</strong> Active for clinical trial referral and network participation.</p>`;
+        centres.appendChild(card);
+      });
+    }
   };
 
   form.addEventListener("submit",async(e)=>{
@@ -369,6 +422,8 @@ const initTrialMap=()=>{
 
   renderResults(state.sites.map((site)=>({site})));
   renderSummaries();
+  renderRegionalHubs();
+  renderCentres();
   renderMap();
 };
 
