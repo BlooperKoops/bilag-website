@@ -334,7 +334,7 @@ const initTrialMap=()=>{
     state.sites.forEach((site)=>{
       const card=document.createElement("article");
       card.className="card trial-summary";
-      const summaryLogo=(site.name==="STRATIFY-LUPUS"&&site.logo)
+      const summaryLogo=(site.logo)
         ?`<img src="${site.logo}" alt="${site.logoAlt||"Trial partner"} logo" class="trial-logo-mini">`
         :"";
       card.innerHTML=`<h3 class="trial-title-row">${site.name}${summaryLogo?` ${summaryLogo}`:""}</h3><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial agents:</strong> ${site.agents}</p>`;
