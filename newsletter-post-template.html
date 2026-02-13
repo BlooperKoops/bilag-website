@@ -11,14 +11,17 @@
     <nav>
       <ul id="nav-list" class="nav-list">
         <li><a href="./index.html">Home</a></li>
-        <li class="nav-resources">
-          <span class="resources-label">Clinician Resources</span>
-          <div class="resources-links">
-            <a href="./publications.html">Publications</a>
-            <a href="./education-events.html">Education/Events</a>
-            <a href="./history-of-bilag.html">History of BILAG</a>
-            <a href="./newsletter.html">Newsletter</a>
+        <li class="nav-dropdown">
+          <div class="nav-dropdown-head">
+            <a href="./publications.html">Clinician Resources</a>
+            <button class="dropdown-toggle" type="button" aria-expanded="false" aria-label="Toggle Clinician Resources">▾</button>
           </div>
+          <ul class="dropdown-menu">
+            <li><a href="./publications.html">Publications</a></li>
+            <li><a href="./education-events.html">Education/Events</a></li>
+            <li><a href="./history-of-bilag.html">History of BILAG</a></li>
+            <li><a href="./newsletter.html">Newsletter</a></li>
+          </ul>
         </li>
         <li><a href="./contact.html" class="btn btn-small">Contact Us</a></li>
       </ul>
