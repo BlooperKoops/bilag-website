@@ -98,23 +98,41 @@ const initMemberMap=()=>{
   const markersLayer=L.layerGroup().addTo(map);
   let userMarker=null;
 
-  const popupHtml=(m)=>{
-    const avatar=m.photo||avatarData(m.name);
-    const objectPos=/jack arnold/i.test(m.name)?"50% 16%":"center";
-    return `<div style="display:grid;grid-template-columns:40px 1fr;gap:.5rem;align-items:center;min-width:210px"><img src="${avatar}" alt="${m.name} avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:${objectPos};border:2px solid #e6d4ff"><div><strong>${m.name}</strong><br><span>${m.hospital}</span><br><span style="color:#65557f">${m.city}</span></div></div>`;
+  const buildMemberSites=()=>{
+    const grouped=new Map();
+    state.members.forEach((member,idx)=>{
+      const key=`${member.hospital}|${member.city}|${member.lat.toFixed(4)}|${member.lng.toFixed(4)}`;
+      if(!grouped.has(key)){
+        grouped.set(key,{
+          hospital:member.hospital,
+          city:member.city,
+          lat:member.lat,
+          lng:member.lng,
+          members:[]
+        });
+      }
+      grouped.get(key).members.push({...member,idx});
+    });
+    return Array.from(grouped.values());
+  };
+
+  const popupHtml=(site)=>{
+    const list=site.members.map((m)=>`<li>${m.name}</li>`).join("");
+    return `<div style="min-width:230px"><strong>${site.hospital}</strong><br><span style="color:#65557f">${site.city}</span><br><span style=\"color:#65557f\">${site.members.length} BILAG member(s)</span><ul style=\"margin:.4rem 0 0;padding-left:1rem;max-height:120px;overflow:auto\">${list}</ul></div>`;
   };
 
   const renderMap=(nearbyIds=new Set())=>{
     markersLayer.clearLayers();
-    state.members.forEach((m,idx)=>{
-      const color=nearbyIds.has(idx)?"#dd5f1a":"#7e2ec5";
-      const marker=L.circleMarker([m.lat,m.lng],{
+    buildMemberSites().forEach((site)=>{
+      const isNearby=site.members.some((m)=>nearbyIds.has(m.idx));
+      const color=isNearby?"#dd5f1a":"#7e2ec5";
+      const marker=L.circleMarker([site.lat,site.lng],{
         radius:7,
         color:"#ffffff",
         weight:2,
         fillColor:color,
         fillOpacity:1
-      }).bindPopup(popupHtml(m)).bindTooltip(`${m.name} - ${m.hospital}`,{direction:"top"});
+      }).bindPopup(popupHtml(site)).bindTooltip(`${site.hospital} (${site.members.length})`,{direction:"top"});
       marker.on("mouseover",()=>marker.openPopup());
       marker.on("mouseout",()=>marker.closePopup());
       marker.addTo(markersLayer);
