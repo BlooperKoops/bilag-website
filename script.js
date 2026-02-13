@@ -52,6 +52,13 @@ const ensureLeaflet=()=>typeof window.L!=="undefined";
 const initMemberMap=()=>{
   const mapElement=document.getElementById("uk-map");
   if(!mapElement) return;
+  const normalizePersonName=(name)=>(
+    (name||"")
+      .toLowerCase()
+      .replace(/^(dr|prof|mr|ms|mrs)\.?\s+/i,"")
+      .replace(/\s+/g," ")
+      .trim()
+  );
   const localPhotoByName={
     "jack arnold":"./Jack headshot.jpeg",
     "muhammad shipa":"./assets/Shipa picture.png",
@@ -166,7 +173,7 @@ const initMemberMap=()=>{
     const withHonorific=(name)=>{
       const n=(name||"").trim();
       if(!n) return "Dr BILAG Member";
-      if(/^(dr|prof)\.?\s/i.test(n)) return n;
+      if(/^(dr|prof|mr|ms|mrs)\.?\s/i.test(n)) return n;
       return `Dr ${n}`;
     };
 
@@ -188,7 +195,7 @@ const initMemberMap=()=>{
         photo:(()=>{
           const explicit=typeof p.photo==="string"?p.photo.trim():"";
           if(explicit) return explicit;
-          const key=(p.name||"").trim().toLowerCase();
+          const key=normalizePersonName(p.name);
           return localPhotoByName[key]||"";
         })()
       }));
