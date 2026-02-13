@@ -229,14 +229,15 @@ nav{flex:1;overflow:visible}
 }
 .email-link:hover{color:#164a97}
 .leeds-logo{
-  max-width:210px;
+  max-width:280px;
   width:100%;
   height:auto;
   display:block;
-  padding:.4rem;
+  object-fit:contain;
+  padding:.9rem;
   border:1px solid rgba(205,181,240,.58);
-  border-radius:10px;
-  background:rgba(255,255,255,.78);
+  border-radius:14px;
+  background:linear-gradient(170deg,#ffffff,#f8f0ff);
 }
 .eb-about-layout{
   display:grid;
