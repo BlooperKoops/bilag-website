@@ -535,7 +535,11 @@ nav{flex:1;overflow:visible}
     border:1px solid var(--line);
     margin-top:.35rem;
     width:100%;
+    display:none;
   }
+  .nav-dropdown:hover .dropdown-menu,
+  .nav-dropdown:focus-within .dropdown-menu{display:none}
+  .nav-dropdown.open .dropdown-menu{display:block}
   nav{overflow:visible}
   .brand{height:60px}
   .site-header .brand-logo{height:60px;max-width:64vw;margin:0}

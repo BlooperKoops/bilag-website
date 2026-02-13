@@ -1,8 +1,31 @@
 const btn=document.querySelector(".menu-toggle");
 const nav=document.querySelector(".nav-list");
 if(btn&&nav){
-  btn.addEventListener("click",()=>{const open=nav.classList.toggle("open");btn.setAttribute("aria-expanded",String(open));});
-  nav.querySelectorAll("a").forEach((a)=>a.addEventListener("click",()=>{nav.classList.remove("open");btn.setAttribute("aria-expanded","false");}));
+  const closeDropdowns=()=>{
+    document.querySelectorAll(".nav-dropdown.open").forEach((item)=>{
+      item.classList.remove("open");
+      const itemBtn=item.querySelector(".dropdown-toggle");
+      if(itemBtn) itemBtn.setAttribute("aria-expanded","false");
+    });
+  };
+  const closeMenu=()=>{
+    nav.classList.remove("open");
+    btn.setAttribute("aria-expanded","false");
+    closeDropdowns();
+  };
+
+  btn.addEventListener("click",()=>{
+    const open=nav.classList.toggle("open");
+    btn.setAttribute("aria-expanded",String(open));
+    if(!open) closeDropdowns();
+  });
+  nav.querySelectorAll("a").forEach((a)=>a.addEventListener("click",closeMenu));
+
+  document.addEventListener("click",(e)=>{
+    if(!nav.contains(e.target)&&e.target!==btn&&!btn.contains(e.target)){
+      closeMenu();
+    }
+  });
 }
 
 document.querySelectorAll(".nav-dropdown .dropdown-toggle").forEach((toggle)=>{
