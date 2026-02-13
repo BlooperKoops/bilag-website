@@ -660,11 +660,18 @@ initNewsletterPage();
 
 const publicationList=document.getElementById("publication-list");
 if(publicationList){
-  const publications=[{
-    url:"https://academic.oup.com/rheumatology/article/61/10/4006/6514547?login=false",
-    title:"Rheumatology (Oxford Academic): BILAG-related publication",
-    image:"https://image.thum.io/get/width/420/crop/240/noanimate/https://academic.oup.com/rheumatology/article/61/10/4006/6514547?login=false"
-  }];
+  const publications=[
+    {url:"https://pubmed.ncbi.nlm.nih.gov/15814577/",title:"PubMed PMID: 15814577"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/35686924/",title:"PubMed PMID: 35686924"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/26589244/",title:"PubMed PMID: 26589244"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/38251591/",title:"PubMed PMID: 38251591"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/36874268/",title:"PubMed PMID: 36874268"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/34698499/",title:"PubMed PMID: 34698499"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/17519277/",title:"PubMed PMID: 17519277"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/37225418/",title:"PubMed PMID: 37225418"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/35266512/",title:"PubMed PMID: 35266512"},
+    {url:"https://pubmed.ncbi.nlm.nih.gov/34301852/",title:"PubMed PMID: 34301852"}
+  ];
 
   const toDomain=(url)=>{
     try{return new URL(url).hostname.replace(/^www\./,"");}
