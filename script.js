@@ -93,7 +93,8 @@ const initMemberMap=()=>{
 
   const popupHtml=(m)=>{
     const avatar=m.photo||avatarData(m.name);
-    return `<div style="display:grid;grid-template-columns:40px 1fr;gap:.5rem;align-items:center;min-width:210px"><img src="${avatar}" alt="${m.name} avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #e6d4ff"><div><strong>${m.name}</strong><br><span>${m.hospital}</span><br><span style="color:#65557f">${m.city}</span></div></div>`;
+    const objectPos=/jack arnold/i.test(m.name)?"50% 16%":"center";
+    return `<div style="display:grid;grid-template-columns:40px 1fr;gap:.5rem;align-items:center;min-width:210px"><img src="${avatar}" alt="${m.name} avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:${objectPos};border:2px solid #e6d4ff"><div><strong>${m.name}</strong><br><span>${m.hospital}</span><br><span style="color:#65557f">${m.city}</span></div></div>`;
   };
 
   const renderMap=(nearbyIds=new Set())=>{
@@ -141,6 +142,7 @@ const initMemberMap=()=>{
       img.className="expert-avatar";
       img.src=m.photo||avatarData(m.name);
       img.alt=`${m.name} profile`;
+      if(/jack arnold/i.test(m.name)) img.style.objectPosition="50% 16%";
       img.loading="lazy";
       const copy=document.createElement("div");
       copy.innerHTML=`<h4>${m.name}</h4><p>Role: ${m.role}</p><p>Hospital: ${m.hospital}</p><p>Location: ${m.city}</p>`;
