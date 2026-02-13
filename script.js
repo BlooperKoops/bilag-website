@@ -236,7 +236,7 @@ const initTrialMap=()=>{
 
   const trialSites=[
     {name:"FIRST Trial",phase:"Randomised controlled trial",status:"Recruiting",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,aim:"To evaluate first-line rituximab-based treatment pathways in active SLE.",criteria:"Adults with active SLE requiring systemic immunosuppressive escalation; standard safety screening required.",agents:"Rituximab-based regimen compared with current standard first-line escalation strategy.",logo:"./assets/university-of-leeds.png",logoAlt:"University of Leeds"},
-    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University Hospitals Birmingham",city:"Birmingham",lat:52.4862,lng:-1.8904,aim:"To test biomarker-stratified treatment sequencing in moderate-to-severe lupus.",criteria:"Adults with serologically active SLE and disease features suitable for biologic treatment stratification.",agents:"Rituximab plus belimumab combination strategy versus biomarker-guided comparator arms."},
+    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,aim:"To test biomarker-stratified treatment sequencing in moderate-to-severe lupus.",criteria:"Adults with serologically active SLE and disease features suitable for biologic treatment stratification.",agents:"Rituximab plus belimumab combination strategy versus biomarker-guided comparator arms.",logo:"./assets/UCL Logo.png",logoAlt:"UCL"},
     {name:"Regional Lupus Trial Hub",phase:"Site preparation",status:"Opening soon",hospital:"Royal Victoria Infirmary",city:"Newcastle",lat:54.9783,lng:-1.6178,aim:"To expand regional recruitment into multicentre lupus interventional and translational studies.",criteria:"Adults with confirmed SLE suitable for screening into active BILAG-affiliated studies.",agents:"Agent selection aligned to currently active BILAG portfolio protocols at time of enrolment."},
     {name:"South Coast SLE Trial Unit",phase:"Early phase",status:"Recruiting",hospital:"University Hospital Southampton",city:"Southampton",lat:50.9097,lng:-1.4044,aim:"To evaluate early-phase therapeutic approaches for immune modulation in systemic lupus.",criteria:"Adults with active SLE meeting protocol laboratory, organ involvement, and treatment-history criteria.",agents:"Protocol-dependent investigational immune-modulating agents under early-phase governance."},
     {name:"Scottish Lupus Trial Node",phase:"Clinical studies",status:"Active",hospital:"Queen Elizabeth University Hospital",city:"Glasgow",lat:55.8642,lng:-4.2518,aim:"To support national trial access and harmonised disease activity measurement in Scottish centres.",criteria:"Patients with confirmed SLE eligible for active interventional or observational trial pathways.",agents:"Portfolio-dependent biologic and conventional immunosuppressive study regimens."},
@@ -311,12 +311,12 @@ const initTrialMap=()=>{
       card.className="expert-item";
       const img=document.createElement("img");
       img.className="expert-avatar";
-      img.src=avatarData(site.name);
-      img.alt=`${site.name} icon`;
+      img.src=site.logo||avatarData(site.name);
+      img.alt=site.logo?`${site.logoAlt||site.name} logo`:`${site.name} icon`;
+      if(site.logo) img.classList.add("expert-avatar-logo");
       img.loading="lazy";
       const copy=document.createElement("div");
-      const titleRow=`<h4 class="trial-title-row">${site.name}${site.logo?` <img src="${site.logo}" alt="${site.logoAlt||"Trial partner"} logo" class="trial-logo-mini">`:""}</h4>`;
-      copy.innerHTML=`${titleRow}<p>Study type: ${site.phase}</p><p>Status: ${site.status}</p><p>Hospital: ${site.hospital}</p><p>Location: ${site.city}</p><p>Aim: ${site.aim}</p><p>Recruitment: ${site.criteria}</p><p>Agents: ${site.agents}</p>`;
+      copy.innerHTML=`<h4>${site.name}</h4><p>Study type: ${site.phase}</p><p>Status: ${site.status}</p><p>Hospital: ${site.hospital}</p><p>Location: ${site.city}</p><p>Aim: ${site.aim}</p><p>Recruitment: ${site.criteria}</p><p>Agents: ${site.agents}</p>`;
       if(typeof item.distance==="number"){
         const dist=document.createElement("span");
         dist.className="distance-pill";
@@ -334,8 +334,10 @@ const initTrialMap=()=>{
     state.sites.forEach((site)=>{
       const card=document.createElement("article");
       card.className="card trial-summary";
-      const heading=`<h3 class="trial-title-row">${site.name}${site.logo?` <img src="${site.logo}" alt="${site.logoAlt||"Trial partner"} logo" class="trial-logo-mini">`:""}</h3>`;
-      card.innerHTML=`${heading}<p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial agents:</strong> ${site.agents}</p>`;
+      const summaryLogo=(site.name==="STRATIFY-LUPUS"&&site.logo)
+        ?`<img src="${site.logo}" alt="${site.logoAlt||"Trial partner"} logo" class="trial-logo-mini">`
+        :"";
+      card.innerHTML=`<h3 class="trial-title-row">${site.name}${summaryLogo?` ${summaryLogo}`:""}</h3><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial agents:</strong> ${site.agents}</p>`;
       summaries.appendChild(card);
     });
   };

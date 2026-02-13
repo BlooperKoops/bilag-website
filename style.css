@@ -211,6 +211,11 @@ nav{flex:1;overflow:visible}
 .expert-results{display:grid;gap:.8rem}
 .expert-item{display:grid;grid-template-columns:58px 1fr;gap:.8rem;align-items:flex-start;padding:.85rem;border:1px solid var(--line);border-radius:12px;background:#fff}
 .expert-avatar{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #e7d4ff;background:#f4e9ff}
+.expert-avatar-logo{
+  object-fit:contain;
+  background:#fff;
+  padding:7px;
+}
 .expert-item h4{margin:.1rem 0 .3rem;font-size:1rem}
 .expert-item p{margin:.15rem 0;font-size:.92rem;color:var(--muted)}
 .distance-pill{display:inline-block;font-size:.82rem;font-weight:700;background:#efe3ff;color:#5f179f;padding:.2rem .5rem;border-radius:999px;margin-top:.2rem}
