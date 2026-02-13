@@ -775,8 +775,19 @@ if(publicationList){
       publicationList.innerHTML="<p>No publications loaded yet.</p>";
       return;
     }
+    const monthMap={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+    const parsePubDate=(value)=>{
+      if(!value) return new Date(0);
+      const parts=String(value).trim().split(/\s+/);
+      const year=Number(parts[0]);
+      const monthKey=(parts[1]||"jan").slice(0,3).toLowerCase();
+      const month=Number.isFinite(monthMap[monthKey])?monthMap[monthKey]:0;
+      if(!Number.isFinite(year)||year<1800) return new Date(0);
+      return new Date(year,month,1);
+    };
+    const ordered=[...publications].sort((a,b)=>parsePubDate(b.date)-parsePubDate(a.date));
     publicationList.innerHTML="";
-    publications.forEach((pub)=>{
+    ordered.forEach((pub)=>{
       const card=document.createElement("article");
       card.className="publication-item";
       const img=document.createElement("img");
