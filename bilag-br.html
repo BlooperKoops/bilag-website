@@ -1,9 +1,8 @@
 <!doctype html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Find a BILAG Member | BILAG Group</title>
+<title>BILAG BR | BILAG Group</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <link rel="stylesheet" href="./style.css"></head><body>
 <header class="site-header">
   <div class="container nav-wrap">
@@ -27,45 +26,40 @@
   </div>
 </header>
 <main><section class="section"><div class="container">
-<p class="eyebrow">British Isles Lupus Assessment Group</p><h1>Find a BILAG Member</h1>
-<p>Search by your local UK address or postcode to find nearby BILAG members, with hospital, role, and profile details.</p>
-<div class="expert-layout">
-  <article class="card">
-    <h3>Search Your Location</h3>
-    <form id="expert-search-form" class="contact-form" autocomplete="on">
-      <label>Your address or postcode
-        <input id="search-address" type="text" placeholder="e.g. Leeds LS1 3EX" required />
-      </label>
-      <label>Search radius
-        <select id="search-radius">
-          <option value="25">25 km</option>
-          <option value="50" selected>50 km</option>
-          <option value="100">100 km</option>
-          <option value="150">150 km</option>
-          <option value="250">250 km</option>
-        </select>
-      </label>
-      <button type="submit" class="btn">Find Members Near Me</button>
-    </form>
-    <p id="search-status" class="meta-text">Using the BILAG member directory for map matching.</p>
-  </article>
+<p class="eyebrow">British Isles Lupus Assessment Group</p><h1>BILAG BR</h1>
 
-  <article class="card map-card">
-    <h3>UK BILAG Member Map</h3>
-    <div id="uk-map" class="uk-map" aria-label="UK map with BILAG member markers"></div>
-    <p class="meta-text">Map view is indicative and intended for quick location matching only.</p>
-  </article>
-</div>
-
-<article class="card results-card">
-  <h3>Nearest Members</h3>
-  <div id="expert-results" class="expert-results"></div>
+<article class="card br-card">
+  <div class="br-layout">
+    <div class="br-copy">
+      <h3>BILAG Biologics Register (BILAG BR)</h3>
+      <p>The BILAG Biologics Register (BILAG BR) is a UK-wide real-world lupus cohort that supports long-term evaluation of biologic therapies, treatment patterns, and clinical outcomes in systemic lupus erythematosus.</p>
+      <p>It provides high-quality observational data to inform clinical practice, guideline development, and collaborative research.</p>
+      <p><a class="btn" href="https://sites.manchester.ac.uk/bilag/" target="_blank" rel="noopener noreferrer">Visit BILAG BR at University of Manchester</a></p>
+    </div>
+    <div class="br-logo-wrap">
+      <img src="./assets/Manchester Logo.png" alt="University of Manchester logo" class="br-logo">
+    </div>
+  </div>
 </article>
+
+<div style="height:1rem"></div>
+
+<article class="card">
+  <h3>Applying for Data Use (Academic Work)</h3>
+  <p>Academic investigators interested in using BILAG BR data should follow this process:</p>
+  <ol>
+    <li>Prepare a short proposal outlining the research question, rationale, study design, variables required, and planned outputs.</li>
+    <li>Provide evidence of institutional sponsorship and local governance/ethics readiness where applicable.</li>
+    <li>Submit the request through the BILAG BR team via the University of Manchester BILAG page and contact route.</li>
+    <li>Data requests are reviewed by the relevant BILAG BR governance group for scientific merit, feasibility, and data protection compliance.</li>
+    <li>If approved, a data sharing agreement and analysis plan are completed before any data release.</li>
+  </ol>
+  <p class="meta-text">For current instructions and contacts, always use the official BILAG BR page.</p>
+</article>
+
 </div></section></main>
 <footer class="footer section"><div class="container footer-grid">
 <div><img src="./assets/bilag-logo-footer.png" class="footer-logo" alt="BILAG logo"></div>
 <div><h3>Contact</h3><p><a href="mailto:ContactBILAG@proton.me">ContactBILAG@proton.me</a></p></div>
 <div><h3>Quick Links</h3><p><a href="./publications.html">Publications</a></p><p><a href="./membership.html">Membership</a></p></div>
-</div></footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="./script.js"></script></body></html>
+</div></footer><script src="./script.js"></script></body></html>
