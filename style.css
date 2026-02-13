@@ -334,22 +334,32 @@ nav{flex:1;overflow:visible}
 .creator-card{
   border:1px solid rgba(205,181,240,.72);
   border-radius:14px;
-  padding:.72rem;
+  padding:.62rem .68rem;
   background:linear-gradient(170deg, rgba(255,255,255,.85), rgba(252,248,255,.75));
+  display:flex;
+  align-items:center;
+  gap:.62rem;
 }
-.creator-card h4{margin:.4rem 0 .15rem;font-size:1rem}
-.creator-card p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.35}
-.creator-photo-placeholder{
-  width:100%;
-  aspect-ratio:16/10;
-  border-radius:12px;
-  border:2px dashed rgba(126,46,197,.35);
+.creator-card h4{margin:0 0 .1rem;font-size:.95rem}
+.creator-card p{margin:0;color:var(--muted);font-size:.82rem;line-height:1.25}
+.creator-copy{min-width:0}
+.creator-headshot{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid rgba(126,46,197,.28);
+  object-fit:cover;
+  flex:0 0 42px;
+  background:#f2e8ff;
+}
+.creator-headshot-fallback{
   display:flex;
   align-items:center;
   justify-content:center;
-  color:#6f4d99;
-  font-weight:700;
-  background:rgba(243,233,255,.55);
+  color:#5f179f;
+  font-weight:600;
+  font-size:.78rem;
+  letter-spacing:.02em;
 }
 .eb-tool-row{
   display:grid;
