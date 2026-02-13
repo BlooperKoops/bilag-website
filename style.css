@@ -315,14 +315,14 @@ nav{flex:1;overflow:visible}
 }
 .group-photo{
   width:100%;
-  min-height:280px;
-  max-height:440px;
+  height:auto;
   border-radius:14px;
   border:1px solid rgba(205,181,240,.72);
-  object-fit:cover;
-  object-position:center;
+  object-fit:contain;
+  object-position:center top;
   display:block;
   margin:0 0 1rem;
+  background:rgba(243,233,255,.55);
 }
 .chair-card{padding:.9rem 1rem}
 .chair-layout{display:grid;grid-template-columns:180px 1fr;gap:.9rem;align-items:center}
@@ -509,7 +509,7 @@ nav{flex:1;overflow:visible}
   .uk-map{min-height:360px}
   .map-hover-card{width:180px}
   .group-photo-placeholder{min-height:220px}
-  .group-photo{min-height:220px}
+  .group-photo{height:auto}
 }
 
 .br-card{padding:1rem 1.1rem}
