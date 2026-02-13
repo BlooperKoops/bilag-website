@@ -325,9 +325,9 @@ nav{flex:1;overflow:visible}
   background:rgba(243,233,255,.55);
 }
 .group-photo-lowered{
-  transform:translateY(34px) scale(.9);
+  transform:translateY(144px) scale(.86);
   transform-origin:center top;
-  margin-bottom:2.6rem;
+  margin-bottom:8.8rem;
 }
 .chair-card{padding:.9rem 1rem}
 .chair-layout{display:grid;grid-template-columns:180px 1fr;gap:.9rem;align-items:center}
