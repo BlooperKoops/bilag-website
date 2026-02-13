@@ -125,7 +125,19 @@ const initMemberMap=()=>{
   };
 
   const popupHtml=(site)=>{
-    const list=site.members.map((m)=>`<li>${m.name}</li>`).join("");
+    const rank=(name)=>{
+      if(/^(prof|professor)\.?\s/i.test(name)) return 0;
+      if(/^dr\.?\s/i.test(name)) return 1;
+      return 2;
+    };
+    const list=[...site.members]
+      .sort((a,b)=>{
+        const r=rank(a.name)-rank(b.name);
+        if(r!==0) return r;
+        return a.name.localeCompare(b.name,undefined,{sensitivity:"base"});
+      })
+      .map((m)=>`<li>${m.name}</li>`)
+      .join("");
     const hospitals=site.hospitals.join("; ");
     return `<div style="min-width:240px"><strong>${site.city}</strong><br><span style="color:#65557f">${hospitals}</span><br><span style="color:#65557f">${site.members.length} BILAG member(s)</span><ul style="margin:.4rem 0 0;padding-left:1rem;max-height:120px;overflow:auto">${list}</ul></div>`;
   };
