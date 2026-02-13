@@ -288,7 +288,6 @@ const initTrialMap=()=>{
   const results=document.getElementById("trial-results");
   const summaries=document.getElementById("trial-summaries");
   const hubs=document.getElementById("trial-regional-hubs");
-  const centres=document.getElementById("trial-centres");
 
   if(!ensureLeaflet()){
     status.textContent="Map library failed to load. Please refresh the page.";
@@ -316,13 +315,25 @@ const initTrialMap=()=>{
     if(site.categories.has("coordinating")) labels.push("Coordinating trial site");
     if(site.categories.has("hub")) labels.push("Regional trial hub");
     if(site.categories.has("referral")) labels.push("Active referral centre");
-    const trials=site.trials.length?`<br><span style="color:#65557f">Trials: ${site.trials.join("; ")}</span>`:"";
-    const members=site.memberCount?`<br><span style="color:#65557f">${site.memberCount} BILAG member(s)</span>`:"";
-    return `<div style="min-width:230px"><strong>${site.hospital}</strong><br><span style="color:#65557f">${site.city}</span><br><span style="color:#65557f">${labels.join(" | ")}</span>${trials}${members}</div>`;
+    const trials=site.trials.length
+      ?`<div style="margin:.35rem 0 0"><strong>Available trials</strong><ul style="margin:.2rem 0 0;padding-left:1rem">${site.trials.map((t)=>`<li>${t}</li>`).join("")}</ul></div>`
+      :"";
+    const membersList=site.memberNames.length
+      ?site.memberNames.map((n)=>`<li>${n}</li>`).join("")
+      :"<li>No members listed for this point</li>";
+    const members=`<div style="margin:.35rem 0 0"><strong>Members</strong><ul style="margin:.2rem 0 0;padding-left:1rem;max-height:120px;overflow:auto">${membersList}</ul></div><span style="color:#65557f">Active members: ${site.memberCount??0}</span>`;
+    return `<div style="min-width:250px"><strong>${site.hospital}</strong><br><span style="color:#65557f">${site.city}</span><br><span style="color:#65557f">${labels.join(" | ")}</span>${trials}${members}</div>`;
   };
 
   const buildMapPoints=()=>{
     const grouped=new Map();
+    const cityMembers=new Map();
+    state.referralCentres.forEach((site)=>{
+      const key=(site.city||"").toLowerCase();
+      const prev=cityMembers.get(key)||new Set();
+      (site.memberNames||[]).forEach((n)=>prev.add(n));
+      cityMembers.set(key,prev);
+    });
     const ensure=(hospital,city,lat,lng)=>{
       const key=`${hospital}|${city}`;
       if(!grouped.has(key)){
@@ -334,7 +345,8 @@ const initTrialMap=()=>{
           lng,
           categories:new Set(),
           trials:[],
-          memberCount:0
+          memberCount:0,
+          memberNames:new Set()
         });
       }
       return grouped.get(key);
@@ -344,18 +356,28 @@ const initTrialMap=()=>{
       const item=ensure(site.hospital,site.city,site.lat,site.lng);
       item.categories.add("referral");
       item.memberCount=site.memberCount||item.memberCount||0;
+      (site.memberNames||[]).forEach((n)=>item.memberNames.add(n));
     });
     state.activeTrials.forEach((site)=>{
       const item=ensure(site.hospital,site.city,site.lat,site.lng);
       item.categories.add("coordinating");
       item.trials.push(site.name);
+      item.memberCount=Math.max(item.memberCount||0,site.memberCount||0);
     });
     state.regionalHubs.forEach((site)=>{
       const item=ensure(site.hospital,site.city,site.lat,site.lng);
       item.categories.add("hub");
       item.trials.push(site.name);
+      item.memberCount=Math.max(item.memberCount||0,site.memberCount||0);
     });
-    return Array.from(grouped.values());
+    return Array.from(grouped.values()).map((site)=>{
+      if(!site.memberNames.size){
+        const cityKey=(site.city||"").toLowerCase();
+        const citySet=cityMembers.get(cityKey);
+        if(citySet) citySet.forEach((n)=>site.memberNames.add(n));
+      }
+      return {...site,memberNames:Array.from(site.memberNames).sort()};
+    });
   };
 
   const renderMap=(nearbyKeys=new Set())=>{
@@ -431,7 +453,7 @@ const initTrialMap=()=>{
       const summaryLogo=(site.logo)
         ?`<img src="${site.logo}" alt="${site.logoAlt||"Trial partner"} logo" class="trial-logo-mini">`
         :"";
-      card.innerHTML=`<h3 class="trial-title-row">${site.name}${summaryLogo?` ${summaryLogo}`:""}</h3><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial agents:</strong> ${site.agents}</p>`;
+      card.innerHTML=`<h3 class="trial-title-row">${site.name}${summaryLogo?` ${summaryLogo}`:""}</h3><p><strong>Active members:</strong> ${site.memberCount??0}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial agents:</strong> ${site.agents}</p>`;
       summaries.appendChild(card);
     });
   };
@@ -442,16 +464,29 @@ const initTrialMap=()=>{
     state.regionalHubs.forEach((site)=>{
       const card=document.createElement("article");
       card.className="card trial-summary";
-      card.innerHTML=`<h3>${site.name}</h3><p><strong>Study type:</strong> ${site.phase}</p><p><strong>Status:</strong> ${site.status}</p><p><strong>Hospital:</strong> ${site.hospital}</p><p><strong>Location:</strong> ${site.city}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment:</strong> ${site.criteria}</p><p><strong>Agents:</strong> ${site.agents}</p>`;
+      card.innerHTML=`<h3>${site.name}</h3><p><strong>Study type:</strong> ${site.phase}</p><p><strong>Status:</strong> ${site.status}</p><p><strong>Hospital:</strong> ${site.hospital}</p><p><strong>Location:</strong> ${site.city}</p><p><strong>Active members:</strong> ${site.memberCount??0}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment:</strong> ${site.criteria}</p><p><strong>Agents:</strong> ${site.agents}</p>`;
       hubs.appendChild(card);
     });
+  };
+
+  const applySiteMemberCounts=()=>{
+    const byHospitalCity=new Map(
+      state.referralCentres.map((c)=>[`${c.hospital}|${c.city}`,c.memberCount||0])
+    );
+    const byCity=new Map();
+    state.referralCentres.forEach((c)=>{
+      byCity.set(c.city,(byCity.get(c.city)||0)+(c.memberCount||0));
+    });
+    const resolveCount=(site)=>byHospitalCity.get(`${site.hospital}|${site.city}`)??byCity.get(site.city)??0;
+    state.activeTrials=state.activeTrials.map((site)=>({...site,memberCount:resolveCount(site)}));
+    state.regionalHubs=state.regionalHubs.map((site)=>({...site,memberCount:resolveCount(site)}));
   };
 
   const buildReferralCentres=async()=>{
     const fallback=Array.from(new Map(
       state.activeTrials.concat(state.regionalHubs).map((s)=>[
         `${s.hospital}|${s.city}`,
-        {hospital:s.hospital,city:s.city,lat:s.lat,lng:s.lng,memberCount:0}
+        {hospital:s.hospital,city:s.city,lat:s.lat,lng:s.lng,memberCount:0,memberNames:[]}
       ])
     ).values());
     try{
@@ -468,10 +503,11 @@ const initTrialMap=()=>{
         const lng=Number(m.lng);
         if(!hospital||!city||!Number.isFinite(lat)||!Number.isFinite(lng)) return;
         const key=`${hospital}|${city}`;
-        const prev=grouped.get(key)||{hospital,city,latSum:0,lngSum:0,count:0};
+        const prev=grouped.get(key)||{hospital,city,latSum:0,lngSum:0,count:0,names:new Set()};
         prev.latSum+=lat;
         prev.lngSum+=lng;
         prev.count+=1;
+        if(typeof m.name==="string"&&m.name.trim()) prev.names.add(m.name.trim());
         grouped.set(key,prev);
       });
       return Array.from(grouped.values())
@@ -480,53 +516,12 @@ const initTrialMap=()=>{
           city:r.city,
           lat:r.latSum/r.count,
           lng:r.lngSum/r.count,
-          memberCount:r.count
+          memberCount:r.count,
+          memberNames:Array.from(r.names).sort()
         }))
         .sort((a,b)=>a.hospital.localeCompare(b.hospital));
     }catch(_err){
       return fallback;
-    }
-  };
-
-  const renderCentres=async()=>{
-    if(!centres) return;
-    const fallback=Array.from(new Map(
-      state.activeTrials.concat(state.regionalHubs).map((s)=>[
-        `${s.hospital}|${s.city}`,
-        {hospital:s.hospital,city:s.city,count:1}
-      ])
-    ).values());
-    try{
-      const res=await fetch("./assets/bilag-members.json",{headers:{"Accept":"application/json"}});
-      if(!res.ok) throw new Error("members file not found");
-      const members=await res.json();
-      if(!Array.isArray(members)) throw new Error("invalid members format");
-      const grouped=new Map();
-      members.forEach((m)=>{
-        if(!m||typeof m.hospital!=="string"||typeof m.city!=="string") return;
-        const hospital=m.hospital.trim();
-        const city=m.city.trim();
-        if(!hospital||!city) return;
-        const key=`${hospital}|${city}`;
-        const prev=grouped.get(key);
-        grouped.set(key,{hospital,city,count:(prev?prev.count:0)+1});
-      });
-      const rows=Array.from(grouped.values()).sort((a,b)=>a.hospital.localeCompare(b.hospital));
-      centres.innerHTML="";
-      rows.forEach((row)=>{
-        const card=document.createElement("article");
-        card.className="card trial-summary";
-        card.innerHTML=`<h3>${row.hospital}</h3><p><strong>City:</strong> ${row.city}</p><p><strong>BILAG members at centre:</strong> ${row.count}</p><p><strong>Trial status:</strong> Active for clinical trial referral and network participation.</p>`;
-        centres.appendChild(card);
-      });
-    }catch(_err){
-      centres.innerHTML="";
-      fallback.forEach((row)=>{
-        const card=document.createElement("article");
-        card.className="card trial-summary";
-        card.innerHTML=`<h3>${row.hospital}</h3><p><strong>City:</strong> ${row.city}</p><p><strong>Trial status:</strong> Active for clinical trial referral and network participation.</p>`;
-        centres.appendChild(card);
-      });
     }
   };
 
@@ -557,10 +552,10 @@ const initTrialMap=()=>{
 
   const init=async()=>{
     state.referralCentres=await buildReferralCentres();
+    applySiteMemberCounts();
     renderResults(state.referralCentres.map((site)=>({site})));
     renderSummaries();
     renderRegionalHubs();
-    renderCentres();
     renderMap();
   };
   init();
