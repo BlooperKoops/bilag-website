@@ -235,7 +235,7 @@ const initMemberMap=()=>{
     const withHonorific=(name)=>{
       const n=(name||"").trim();
       if(!n) return "Dr BILAG Member";
-      if(/^(dr|prof|mr|ms|mrs)\.?\s/i.test(n)) return n;
+      if(/^(dr|prof|professor|mr|ms|mrs)\.?\s/i.test(n)) return n;
       return `Dr ${n}`;
     };
 
@@ -684,23 +684,91 @@ initNewsletterPage();
 const publicationList=document.getElementById("publication-list");
 if(publicationList){
   const publications=[
-    {url:"https://pubmed.ncbi.nlm.nih.gov/15814577/",title:"PubMed PMID: 15814577"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/35686924/",title:"PubMed PMID: 35686924"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/26589244/",title:"PubMed PMID: 26589244"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/38251591/",title:"PubMed PMID: 38251591"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/36874268/",title:"PubMed PMID: 36874268"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/34698499/",title:"PubMed PMID: 34698499"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/17519277/",title:"PubMed PMID: 17519277"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/37225418/",title:"PubMed PMID: 37225418"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/35266512/",title:"PubMed PMID: 35266512"},
-    {url:"https://pubmed.ncbi.nlm.nih.gov/34301852/",title:"PubMed PMID: 34301852"}
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/15814577/",
+      title:"BILAG 2004. Development and initial validation of an updated version of the British Isles Lupus Assessment Group's disease activity index for patients with systemic lupus erythematosus",
+      authors:"D A Isenberg et al.",
+      journal:"Rheumatology (Oxford)",
+      date:"2005 Jul"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/35686924/",
+      title:"The BILAG-2004 index is associated with development of new damage in SLE",
+      authors:"Chee-Seng Yee et al.",
+      journal:"Rheumatology (Oxford)",
+      date:"2023 Feb"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/26589244/",
+      title:"From BILAG to BILAG-based combined lupus assessment-30 years on",
+      authors:"Claire-Louise Murphy et al.",
+      journal:"Rheumatology (Oxford)",
+      date:"2016 Aug"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/38251591/",
+      title:"Early infection risk in patients with systemic lupus erythematosus treated with rituximab or belimumab from the British Isles Lupus Assessment Group Biologics Register (BILAG-BR): a prospective longitudinal study",
+      authors:"Mia Rodziewicz et al.",
+      journal:"Lancet Rheumatology",
+      date:"2023 May"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/36874268/",
+      title:"How can we accurately measure disease activity during pregnancy in systemic lupus erythematosus? New insights from the BILAG-2004 Pregnancy Index",
+      authors:"Sasha Ali et al.",
+      journal:"Rheumatology Advances in Practice",
+      date:"2023 Feb"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/34698499/",
+      title:"Effectiveness of Belimumab After Rituximab in Systemic Lupus Erythematosus: A Randomized Controlled Trial",
+      authors:"Muhammad Shipa et al.",
+      journal:"Annals of Internal Medicine",
+      date:"2021 Dec"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/17519277/",
+      title:"BILAG-2004 index captures systemic lupus erythematosus disease activity better than SLEDAI-2000",
+      authors:"C-S Yee et al.",
+      journal:"Annals of the Rheumatic Diseases",
+      date:"2008 Jun"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/37225418/",
+      title:"Revision to the musculoskeletal domain of the BILAG-2004 index to incorporate ultrasound findings",
+      authors:"Robert D Sandler et al.",
+      journal:"Rheumatology (Oxford)",
+      date:"2024 Feb"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/35266512/",
+      title:"Efficacy and safety of obinutuzumab in systemic lupus erythematosus patients with secondary non-response to rituximab",
+      authors:"Jack Arnold et al.",
+      journal:"Rheumatology (Oxford)",
+      date:"2022 Nov"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/34301852/",
+      title:"Lupus clinical trial eligibility in a real-world setting: results from the British Isles Lupus Assessment Group-Biologics Register (BILAG-BR)",
+      authors:"Sarah Dyball et al.",
+      journal:"Lupus Science & Medicine",
+      date:"2021 Jul"
+    }
   ];
 
   const toDomain=(url)=>{
     try{return new URL(url).hostname.replace(/^www\./,"");}
     catch{return "Publication source";}
   };
-  const fallbackThumb=(url)=>`https://www.google.com/s2/favicons?sz=128&domain_url=${encodeURIComponent(url)}`;
+  const pmidFromUrl=(url)=>{
+    const match=(url||"").match(/pubmed\.ncbi\.nlm\.nih\.gov\/(\d+)/i);
+    return match?match[1]:"PubMed";
+  };
+  const fallbackThumb=(pub)=>{
+    const pmid=pmidFromUrl(pub.url);
+    const label=encodeURIComponent(`PMID ${pmid}`);
+    return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='240' viewBox='0 0 420 240'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23ede0ff'/><stop offset='100%' stop-color='%23d7c0ff'/></linearGradient></defs><rect width='420' height='240' rx='16' fill='url(%23g)'/><rect x='24' y='24' width='372' height='56' rx='10' fill='%23611db0' opacity='.86'/><text x='42' y='58' font-family='Arial' font-size='18' font-weight='700' fill='white'>PubMed</text><text x='42' y='132' font-family='Arial' font-size='26' font-weight='700' fill='%23351a58'>${label}</text><text x='42' y='170' font-family='Arial' font-size='14' fill='%235f4d7f'>Selected BILAG publication</text></svg>`;
+  };
 
   const render=()=>{
     if(!publications.length){
@@ -716,10 +784,14 @@ if(publicationList){
       img.src=pub.image || `https://image.thum.io/get/width/420/crop/240/noanimate/${pub.url}`;
       img.alt=`Preview for ${pub.title || pub.url}`;
       img.loading="lazy";
-      img.onerror=()=>{img.onerror=null;img.src=fallbackThumb(pub.url);};
+      img.onerror=()=>{img.onerror=null;img.src=fallbackThumb(pub);};
       const copy=document.createElement("div");
       const h=document.createElement("h4");
       h.textContent=pub.title || toDomain(pub.url);
+      const author=document.createElement("p");
+      author.textContent=pub.authors || "Author details on PubMed";
+      const journal=document.createElement("p");
+      journal.textContent=[pub.journal,pub.date].filter(Boolean).join(" | ");
       const src=document.createElement("p");
       src.textContent=toDomain(pub.url);
       const a=document.createElement("a");
@@ -728,7 +800,7 @@ if(publicationList){
       a.target="_blank";
       a.rel="noopener noreferrer";
       a.textContent=pub.url;
-      copy.append(h,src,a);
+      copy.append(h,author,journal,src,a);
       card.append(img,copy);
       publicationList.appendChild(card);
     });
