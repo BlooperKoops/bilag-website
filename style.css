@@ -47,6 +47,18 @@ nav{flex:1;overflow:visible}
 }
 .nav-list a{font-weight:600;color:var(--muted);font-size:.84rem;white-space:nowrap}
 .nav-list a:hover{color:var(--primary-strong)}
+.nav-list > li > a{
+  display:inline-flex;
+  align-items:center;
+  padding:.3rem .62rem;
+  border:1px solid rgba(205,181,240,.72);
+  border-radius:999px;
+  background:#fff;
+  box-shadow:0 4px 10px rgba(73,16,126,.08);
+}
+.nav-list > li > a:hover{
+  background:#f5edff;
+}
 .nav-dropdown{position:relative}
 .nav-dropdown-head{
   display:flex;
@@ -114,6 +126,11 @@ nav{flex:1;overflow:visible}
   box-shadow:0 10px 24px rgba(89,28,149,.3), inset 0 1px 0 rgba(255,255,255,.35);
 }
 .nav-list a.btn{color:#fff}
+.nav-list > li > a.btn{
+  border:0;
+  background:linear-gradient(135deg,var(--primary),var(--primary-strong));
+  box-shadow:0 10px 24px rgba(89,28,149,.3), inset 0 1px 0 rgba(255,255,255,.35);
+}
 .btn-small{padding:.42rem .75rem}
 .eyebrow{font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);font-size:.82rem}
 .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:1.2rem;align-items:center}
@@ -446,6 +463,13 @@ nav{flex:1;overflow:visible}
     box-shadow:var(--shadow)
   }
   .nav-list.open{display:flex}
+  .nav-list > li{width:100%}
+  .nav-list > li > a{
+    width:100%;
+    border-radius:10px;
+    justify-content:flex-start;
+    padding:.45rem .55rem;
+  }
   .nav-dropdown{
     width:100%;
   }
