@@ -52,6 +52,11 @@ const ensureLeaflet=()=>typeof window.L!=="undefined";
 const initMemberMap=()=>{
   const mapElement=document.getElementById("uk-map");
   if(!mapElement) return;
+  const localPhotoByName={
+    "jack arnold":"./Jack headshot.jpeg",
+    "muhammad shipa":"./assets/Shipa picture.png",
+    "anastasia madenidou":"./assets/Anastasia-Madenidou.webp"
+  };
 
   const fallbackMembers=[
     {name:"Prof Caroline Gordon",role:"Founding and Clinical Leadership",hospital:"University Hospitals Birmingham",city:"Birmingham",lat:52.4862,lng:-1.8904,photo:""},
@@ -178,7 +183,12 @@ const initMemberMap=()=>{
         city:p.city.trim(),
         lat:Number(p.lat),
         lng:Number(p.lng),
-        photo:typeof p.photo==="string"?p.photo.trim():""
+        photo:(()=>{
+          const explicit=typeof p.photo==="string"?p.photo.trim():"";
+          if(explicit) return explicit;
+          const key=(p.name||"").trim().toLowerCase();
+          return localPhotoByName[key]||"";
+        })()
       }));
       if(clean.length){
         state.members=clean;
