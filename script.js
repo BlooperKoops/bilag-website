@@ -5,24 +5,6 @@ if(btn&&nav){
   nav.querySelectorAll("a").forEach((a)=>a.addEventListener("click",()=>{nav.classList.remove("open");btn.setAttribute("aria-expanded","false");}));
 }
 
-document.querySelectorAll(".nav-dropdown .dropdown-toggle").forEach((toggle)=>{
-  toggle.addEventListener("click",(e)=>{
-    e.preventDefault();
-    const parent=toggle.closest(".nav-dropdown");
-    if(!parent) return;
-    const willOpen=!parent.classList.contains("open");
-    document.querySelectorAll(".nav-dropdown.open").forEach((item)=>{
-      if(item!==parent){
-        item.classList.remove("open");
-        const itemBtn=item.querySelector(".dropdown-toggle");
-        if(itemBtn) itemBtn.setAttribute("aria-expanded","false");
-      }
-    });
-    parent.classList.toggle("open",willOpen);
-    toggle.setAttribute("aria-expanded",String(willOpen));
-  });
-});
-
 const toRad=(d)=>d*Math.PI/180;
 const distanceKm=(a,b)=>{
   const R=6371;

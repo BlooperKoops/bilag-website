@@ -35,47 +35,50 @@ a{text-decoration:none;color:inherit}
   mix-blend-mode:normal;
   filter:none;
 }
-nav{flex:1;overflow-x:auto}
-.nav-list{list-style:none;display:flex;gap:.5rem;margin:0;padding:0;align-items:center;min-width:max-content}
+nav{flex:1;overflow:visible}
+.nav-list{
+  list-style:none;
+  display:flex;
+  flex-wrap:wrap;
+  gap:.45rem .5rem;
+  margin:0;
+  padding:0;
+  align-items:center;
+}
 .nav-list a{font-weight:600;color:var(--muted);font-size:.84rem;white-space:nowrap}
 .nav-list a:hover{color:var(--primary-strong)}
-.nav-dropdown{position:relative}
-.nav-dropdown-head{display:flex;align-items:center;gap:.3rem}
-.dropdown-toggle{
-  border:0;
-  background:transparent;
-  color:var(--muted);
+.nav-resources{
+  flex:0 0 100%;
+  display:flex;
+  align-items:center;
+  gap:.55rem;
+  margin-top:.05rem;
+}
+.resources-label{
+  font-size:.72rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
   font-weight:700;
-  cursor:pointer;
-  line-height:1;
-  padding:.1rem .25rem;
+  color:var(--primary);
 }
-.dropdown-menu{
-  list-style:none;
-  margin:0;
-  padding:.45rem;
-  position:absolute;
-  top:calc(100% + .4rem);
-  left:0;
-  min-width:190px;
+.resources-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.38rem;
+}
+.resources-links a{
+  font-size:.78rem;
+  font-weight:600;
+  color:#5f4d7f;
+  border:1px solid rgba(205,181,240,.72);
+  border-radius:999px;
+  padding:.2rem .55rem;
   background:#fff;
-  border:1px solid var(--line);
-  border-radius:12px;
-  box-shadow:var(--shadow);
-  display:none;
-  z-index:30;
 }
-.dropdown-menu li{margin:0;padding:0}
-.dropdown-menu a{
-  display:block;
-  padding:.45rem .55rem;
-  border-radius:8px;
-  color:var(--muted);
+.resources-links a:hover{
+  color:var(--primary-strong);
+  background:#f6ecff;
 }
-.dropdown-menu a:hover{background:#f5edff;color:var(--primary-strong)}
-.nav-dropdown:hover .dropdown-menu,
-.nav-dropdown:focus-within .dropdown-menu,
-.nav-dropdown.open .dropdown-menu{display:block}
 .btn{
   background:linear-gradient(135deg,var(--primary),var(--primary-strong));
   color:#fff;
@@ -101,6 +104,7 @@ nav{flex:1;overflow-x:auto}
 .cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .cards.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 .card{padding:1rem 1.1rem}
+.section-gap{height:1rem}
 .meta-text{font-size:.9rem;color:var(--muted);margin:.6rem 0 0}
 .expert-layout{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
 .upload-wrap{margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--line)}
@@ -213,6 +217,19 @@ nav{flex:1;overflow-x:auto}
   border:1px solid rgba(205,181,240,.58);
   border-radius:10px;
   background:rgba(255,255,255,.78);
+}
+.eb-hero-card{
+  border:1px solid rgba(183,143,232,.7);
+}
+.eb-hero-layout{
+  display:grid;
+  grid-template-columns:1fr minmax(180px,240px);
+  gap:1rem;
+  align-items:center;
+}
+.video-shell{
+  border:1px solid rgba(205,181,240,.72);
+  background:#fff;
 }
 .social-links-top{display:flex;gap:.6rem;flex-wrap:wrap;margin:.7rem 0 1rem}
 .social-links-top a{
@@ -404,14 +421,22 @@ nav{flex:1;overflow-x:auto}
     box-shadow:var(--shadow)
   }
   .nav-list.open{display:flex}
-  .nav-dropdown{width:100%}
-  .nav-dropdown-head{width:100%;justify-content:space-between}
-  .dropdown-menu{
-    position:static;
-    box-shadow:none;
-    border:1px solid var(--line);
-    margin-top:.35rem;
+  .nav-resources{
     width:100%;
+    display:grid;
+    gap:.35rem;
+    margin-top:.15rem;
+  }
+  .resources-links{
+    width:100%;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:.35rem;
+  }
+  .resources-links a{
+    border-radius:10px;
+    padding:.45rem .55rem;
+    background:#fff;
   }
   nav{overflow:visible}
   .brand{height:60px}
@@ -421,6 +446,7 @@ nav{flex:1;overflow-x:auto}
   .container{width:min(1160px,calc(100% - 1rem))}
   .chair-layout{grid-template-columns:1fr}
   .eb-about-layout{grid-template-columns:1fr}
+  .eb-hero-layout{grid-template-columns:1fr}
   .eb-tool-row{grid-template-columns:1fr}
   .eb-cta-wrap{justify-content:flex-start}
 }
