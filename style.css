@@ -349,8 +349,12 @@ nav{flex:1;overflow:visible}
   border-radius:50%;
   border:1px solid rgba(126,46,197,.28);
   object-fit:cover;
+  object-position:center;
   flex:0 0 42px;
   background:#f2e8ff;
+}
+.creator-headshot-jack{
+  object-position:50% 22%;
 }
 .creator-headshot-fallback{
   display:flex;
