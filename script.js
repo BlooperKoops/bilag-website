@@ -101,24 +101,33 @@ const initMemberMap=()=>{
   const buildMemberSites=()=>{
     const grouped=new Map();
     state.members.forEach((member,idx)=>{
-      const key=`${member.hospital}|${member.city}|${member.lat.toFixed(4)}|${member.lng.toFixed(4)}`;
+      const cityKey=(member.city||"").trim().toLowerCase();
+      const key=cityKey||`${member.lat.toFixed(3)}|${member.lng.toFixed(3)}`;
       if(!grouped.has(key)){
         grouped.set(key,{
-          hospital:member.hospital,
           city:member.city,
           lat:member.lat,
           lng:member.lng,
-          members:[]
+          members:[],
+          hospitals:new Set()
         });
       }
-      grouped.get(key).members.push({...member,idx});
+      const site=grouped.get(key);
+      site.members.push({...member,idx});
+      site.hospitals.add(member.hospital);
     });
-    return Array.from(grouped.values());
+    return Array.from(grouped.values()).map((site)=>{
+      const count=site.members.length||1;
+      const lat=site.members.reduce((sum,m)=>sum+m.lat,0)/count;
+      const lng=site.members.reduce((sum,m)=>sum+m.lng,0)/count;
+      return {...site,lat,lng,hospitals:Array.from(site.hospitals)};
+    });
   };
 
   const popupHtml=(site)=>{
     const list=site.members.map((m)=>`<li>${m.name}</li>`).join("");
-    return `<div style="min-width:230px"><strong>${site.hospital}</strong><br><span style="color:#65557f">${site.city}</span><br><span style=\"color:#65557f\">${site.members.length} BILAG member(s)</span><ul style=\"margin:.4rem 0 0;padding-left:1rem;max-height:120px;overflow:auto\">${list}</ul></div>`;
+    const hospitals=site.hospitals.join("; ");
+    return `<div style="min-width:240px"><strong>${site.city}</strong><br><span style="color:#65557f">${hospitals}</span><br><span style="color:#65557f">${site.members.length} BILAG member(s)</span><ul style="margin:.4rem 0 0;padding-left:1rem;max-height:120px;overflow:auto">${list}</ul></div>`;
   };
 
   const renderMap=(nearbyIds=new Set())=>{
@@ -132,7 +141,7 @@ const initMemberMap=()=>{
         weight:2,
         fillColor:color,
         fillOpacity:1
-      }).bindPopup(popupHtml(site)).bindTooltip(`${site.hospital} (${site.members.length})`,{direction:"top"});
+      }).bindPopup(popupHtml(site)).bindTooltip(`${site.city} (${site.members.length})`,{direction:"top"});
       marker.on("mouseover",()=>marker.openPopup());
       marker.on("mouseout",()=>marker.closePopup());
       marker.addTo(markersLayer);
@@ -260,8 +269,8 @@ const initTrialMap=()=>{
   if(!mapElement) return;
 
   const activeTrials=[
-    {name:"FIRST Trial",phase:"Randomised controlled trial",status:"Recruiting",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,aim:"To evaluate first-line rituximab-based treatment pathways in active SLE.",criteria:"Adults with active SLE requiring systemic immunosuppressive escalation; standard safety screening required.",agents:"Rituximab-based regimen compared with current standard first-line escalation strategy.",logo:"./assets/university-of-leeds.png",logoAlt:"University of Leeds",locationLabel:"Coordinating centre"},
-    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,aim:"To test biomarker-stratified treatment sequencing in moderate-to-severe lupus.",criteria:"Adults with serologically active SLE and disease features suitable for biologic treatment stratification.",agents:"Rituximab plus belimumab combination strategy versus biomarker-guided comparator arms.",logo:"./assets/UCL Logo.png",logoAlt:"UCL",locationLabel:"Coordinating centre"}
+    {name:"FIRST Trial",phase:"Randomised controlled trial",status:"Recruiting",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,aim:"To evaluate first-line rituximab-based treatment pathways in active SLE.",criteria:"Adults with active SLE requiring systemic immunosuppressive escalation; standard safety screening required.",agents:"Rituximab-based regimen compared with current standard first-line escalation strategy.",logo:"./assets/university-of-leeds.png",logoAlt:"University of Leeds",institutionLabel:"Coordinating institution",institutionName:"University of Leeds",locationLabel:"Coordinating centre"},
+    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,aim:"To test biomarker-stratified treatment sequencing in moderate-to-severe lupus.",criteria:"Adults with serologically active SLE and disease features suitable for biologic treatment stratification.",agents:"Rituximab plus belimumab combination strategy versus biomarker-guided comparator arms.",logo:"./assets/UCL Logo.png",logoAlt:"UCL",institutionLabel:"Coordinating institution",institutionName:"University College London",locationLabel:"Coordinating centre"}
   ];
 
   const regionalHubs=[
@@ -271,7 +280,7 @@ const initTrialMap=()=>{
     {name:"Northern Ireland Collaboration Site",phase:"Registry-linked studies",status:"Active",hospital:"Belfast City Hospital",city:"Belfast",lat:54.5973,lng:-5.9301,aim:"To integrate registry and trial workflows for improved regional lupus trial participation.",criteria:"Adults with SLE under specialist care with consent for registry linkage and protocol screening.",agents:"Registry-linked therapeutic cohorts including biologic and standard-care comparators."}
   ];
 
-  const state={sites:[...activeTrials,...regionalHubs],activeTrials,regionalHubs,userLocation:null};
+  const state={activeTrials,regionalHubs,referralCentres:[],userLocation:null};
   const form=document.getElementById("trial-search-form");
   const addressInput=document.getElementById("trial-search-address");
   const radiusSelect=document.getElementById("trial-search-radius");
@@ -295,20 +304,76 @@ const initTrialMap=()=>{
 
   const markersLayer=L.layerGroup().addTo(map);
   let userMarker=null;
+  const categoryColor={
+    coordinating:"#7e2ec5",
+    hub:"#9d63dd",
+    referral:"#5f179f"
+  };
+  const siteKey=(site)=>`${site.hospital}|${site.city}`;
 
-  const popupHtml=(site)=>`<div style="min-width:220px"><strong>${site.name}</strong><br><span>${site.hospital}</span><br><span style="color:#65557f">${site.city}</span><br><span style="color:#65557f">${site.status}</span></div>`;
+  const popupHtml=(site)=>{
+    const labels=[];
+    if(site.categories.has("coordinating")) labels.push("Coordinating trial site");
+    if(site.categories.has("hub")) labels.push("Regional trial hub");
+    if(site.categories.has("referral")) labels.push("Active referral centre");
+    const trials=site.trials.length?`<br><span style="color:#65557f">Trials: ${site.trials.join("; ")}</span>`:"";
+    const members=site.memberCount?`<br><span style="color:#65557f">${site.memberCount} BILAG member(s)</span>`:"";
+    return `<div style="min-width:230px"><strong>${site.hospital}</strong><br><span style="color:#65557f">${site.city}</span><br><span style="color:#65557f">${labels.join(" | ")}</span>${trials}${members}</div>`;
+  };
 
-  const renderMap=(nearbyIds=new Set())=>{
+  const buildMapPoints=()=>{
+    const grouped=new Map();
+    const ensure=(hospital,city,lat,lng)=>{
+      const key=`${hospital}|${city}`;
+      if(!grouped.has(key)){
+        grouped.set(key,{
+          key,
+          hospital,
+          city,
+          lat,
+          lng,
+          categories:new Set(),
+          trials:[],
+          memberCount:0
+        });
+      }
+      return grouped.get(key);
+    };
+
+    state.referralCentres.forEach((site)=>{
+      const item=ensure(site.hospital,site.city,site.lat,site.lng);
+      item.categories.add("referral");
+      item.memberCount=site.memberCount||item.memberCount||0;
+    });
+    state.activeTrials.forEach((site)=>{
+      const item=ensure(site.hospital,site.city,site.lat,site.lng);
+      item.categories.add("coordinating");
+      item.trials.push(site.name);
+    });
+    state.regionalHubs.forEach((site)=>{
+      const item=ensure(site.hospital,site.city,site.lat,site.lng);
+      item.categories.add("hub");
+      item.trials.push(site.name);
+    });
+    return Array.from(grouped.values());
+  };
+
+  const renderMap=(nearbyKeys=new Set())=>{
     markersLayer.clearLayers();
-    state.sites.forEach((site,idx)=>{
-      const color=nearbyIds.has(idx)?"#dd5f1a":"#7e2ec5";
+    buildMapPoints().forEach((site)=>{
+      const baseColor=site.categories.has("coordinating")
+        ?categoryColor.coordinating
+        :site.categories.has("hub")
+          ?categoryColor.hub
+          :categoryColor.referral;
+      const isNearby=nearbyKeys.has(site.key);
       const marker=L.circleMarker([site.lat,site.lng],{
         radius:7,
-        color:"#ffffff",
-        weight:2,
-        fillColor:color,
+        color:isNearby?"#dd5f1a":"#ffffff",
+        weight:isNearby?3:2,
+        fillColor:baseColor,
         fillOpacity:1
-      }).bindPopup(popupHtml(site)).bindTooltip(`${site.name} - ${site.hospital}`,{direction:"top"});
+      }).bindPopup(popupHtml(site)).bindTooltip(`${site.hospital} (${site.city})`,{direction:"top"});
       marker.on("mouseover",()=>marker.openPopup());
       marker.on("mouseout",()=>marker.closePopup());
       marker.addTo(markersLayer);
@@ -331,7 +396,7 @@ const initTrialMap=()=>{
 
   const renderResults=(rows)=>{
     if(!rows.length){
-      results.innerHTML="<p>No trial sites found in this radius. Try increasing to 100 km or 150 km.</p>";
+      results.innerHTML="<p>No referral centres found in this radius. Try increasing to 100 km or 150 km.</p>";
       return;
     }
     results.innerHTML="";
@@ -341,12 +406,11 @@ const initTrialMap=()=>{
       card.className="expert-item";
       const img=document.createElement("img");
       img.className="expert-avatar";
-      img.src=site.logo||avatarData(site.name);
-      img.alt=site.logo?`${site.logoAlt||site.name} logo`:`${site.name} icon`;
-      if(site.logo) img.classList.add("expert-avatar-logo");
+      img.src=avatarData(site.hospital);
+      img.alt=`${site.hospital} icon`;
       img.loading="lazy";
       const copy=document.createElement("div");
-      copy.innerHTML=`<h4>${site.name}</h4><p>Study type: ${site.phase}</p><p>Status: ${site.status}</p><p>Hospital: ${site.hospital}</p><p>${site.locationLabel||"Location"}: ${site.city}</p><p>Aim: ${site.aim}</p><p>Recruitment: ${site.criteria}</p><p>Agents: ${site.agents}</p>`;
+      copy.innerHTML=`<h4>${site.hospital}</h4><p>City: ${site.city}</p><p>BILAG members at centre: ${site.memberCount||0}</p><p>Status: Active clinical trial and referral centre</p>`;
       if(typeof item.distance==="number"){
         const dist=document.createElement("span");
         dist.className="distance-pill";
@@ -378,14 +442,60 @@ const initTrialMap=()=>{
     state.regionalHubs.forEach((site)=>{
       const card=document.createElement("article");
       card.className="card trial-summary";
-      card.innerHTML=`<h3>${site.name}</h3><p><strong>Status:</strong> ${site.status}</p><p><strong>Hospital:</strong> ${site.hospital}</p><p><strong>Location:</strong> ${site.city}</p><p><strong>Aim:</strong> ${site.aim}</p>`;
+      card.innerHTML=`<h3>${site.name}</h3><p><strong>Study type:</strong> ${site.phase}</p><p><strong>Status:</strong> ${site.status}</p><p><strong>Hospital:</strong> ${site.hospital}</p><p><strong>Location:</strong> ${site.city}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment:</strong> ${site.criteria}</p><p><strong>Agents:</strong> ${site.agents}</p>`;
       hubs.appendChild(card);
     });
   };
 
+  const buildReferralCentres=async()=>{
+    const fallback=Array.from(new Map(
+      state.activeTrials.concat(state.regionalHubs).map((s)=>[
+        `${s.hospital}|${s.city}`,
+        {hospital:s.hospital,city:s.city,lat:s.lat,lng:s.lng,memberCount:0}
+      ])
+    ).values());
+    try{
+      const res=await fetch("./assets/bilag-members.json",{headers:{"Accept":"application/json"}});
+      if(!res.ok) throw new Error("members file not found");
+      const members=await res.json();
+      if(!Array.isArray(members)) throw new Error("invalid members format");
+      const grouped=new Map();
+      members.forEach((m)=>{
+        if(!m||typeof m.hospital!=="string"||typeof m.city!=="string") return;
+        const hospital=m.hospital.trim();
+        const city=m.city.trim();
+        const lat=Number(m.lat);
+        const lng=Number(m.lng);
+        if(!hospital||!city||!Number.isFinite(lat)||!Number.isFinite(lng)) return;
+        const key=`${hospital}|${city}`;
+        const prev=grouped.get(key)||{hospital,city,latSum:0,lngSum:0,count:0};
+        prev.latSum+=lat;
+        prev.lngSum+=lng;
+        prev.count+=1;
+        grouped.set(key,prev);
+      });
+      return Array.from(grouped.values())
+        .map((r)=>({
+          hospital:r.hospital,
+          city:r.city,
+          lat:r.latSum/r.count,
+          lng:r.lngSum/r.count,
+          memberCount:r.count
+        }))
+        .sort((a,b)=>a.hospital.localeCompare(b.hospital));
+    }catch(_err){
+      return fallback;
+    }
+  };
+
   const renderCentres=async()=>{
     if(!centres) return;
-    const fallback=Array.from(new Map(state.sites.map((s)=>[`${s.hospital}|${s.city}`,{hospital:s.hospital,city:s.city,count:1}])).values());
+    const fallback=Array.from(new Map(
+      state.activeTrials.concat(state.regionalHubs).map((s)=>[
+        `${s.hospital}|${s.city}`,
+        {hospital:s.hospital,city:s.city,count:1}
+      ])
+    ).values());
     try{
       const res=await fetch("./assets/bilag-members.json",{headers:{"Accept":"application/json"}});
       if(!res.ok) throw new Error("members file not found");
@@ -430,13 +540,13 @@ const initTrialMap=()=>{
       const loc=await geocodeAddress(address);
       state.userLocation={lat:loc.lat,lng:loc.lng};
       const radius=Number(radiusSelect.value)||50;
-      const nearby=state.sites
+      const nearby=state.referralCentres
         .map((site,idx)=>({site,idx,distance:distanceKm(state.userLocation,site)}))
         .filter((item)=>item.distance<=radius)
         .sort((a,b)=>a.distance-b.distance);
       renderResults(nearby);
-      renderMap(new Set(nearby.map((n)=>n.idx)));
-      status.textContent=`Showing ${nearby.length} trial site(s) within ${radius} km of ${loc.label}.`;
+      renderMap(new Set(nearby.map((n)=>siteKey(n.site))));
+      status.textContent=`Showing ${nearby.length} referral centre(s) within ${radius} km of ${loc.label}.`;
       map.flyTo([state.userLocation.lat,state.userLocation.lng],7,{duration:0.6});
     }catch(err){
       status.textContent=`Could not locate that address. Try a UK postcode or town. (${err.message})`;
@@ -445,11 +555,15 @@ const initTrialMap=()=>{
     }
   });
 
-  renderResults(state.sites.map((site)=>({site})));
-  renderSummaries();
-  renderRegionalHubs();
-  renderCentres();
-  renderMap();
+  const init=async()=>{
+    state.referralCentres=await buildReferralCentres();
+    renderResults(state.referralCentres.map((site)=>({site})));
+    renderSummaries();
+    renderRegionalHubs();
+    renderCentres();
+    renderMap();
+  };
+  init();
 };
 
 initMemberMap();
