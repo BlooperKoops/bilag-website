@@ -313,6 +313,17 @@ nav{flex:1;overflow:visible}
   background:linear-gradient(180deg,rgba(243,233,255,.8),rgba(236,224,252,.7));
   margin:0 0 1rem;
 }
+.group-photo{
+  width:100%;
+  min-height:280px;
+  max-height:440px;
+  border-radius:14px;
+  border:1px solid rgba(205,181,240,.72);
+  object-fit:cover;
+  object-position:center;
+  display:block;
+  margin:0 0 1rem;
+}
 .chair-card{padding:.9rem 1rem}
 .chair-layout{display:grid;grid-template-columns:180px 1fr;gap:.9rem;align-items:center}
 .chair-layout h4{margin:.1rem 0 .3rem}
@@ -498,6 +509,7 @@ nav{flex:1;overflow:visible}
   .uk-map{min-height:360px}
   .map-hover-card{width:180px}
   .group-photo-placeholder{min-height:220px}
+  .group-photo{min-height:220px}
 }
 
 .br-card{padding:1rem 1.1rem}
