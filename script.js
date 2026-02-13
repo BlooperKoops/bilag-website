@@ -318,8 +318,14 @@ const initTrialMap=()=>{
     const trials=site.trials.length
       ?`<div style="margin:.35rem 0 0"><strong>Available trials</strong><ul style="margin:.2rem 0 0;padding-left:1rem">${site.trials.map((t)=>`<li>${t}</li>`).join("")}</ul></div>`
       :"";
-    const membersList=site.memberNames.length
-      ?site.memberNames.map((n)=>`<li>${n}</li>`).join("")
+    const sortedNames=[...(site.memberNames||[])].sort((a,b)=>{
+      const aProf=/^(prof|professor)\.?\s/i.test(a);
+      const bProf=/^(prof|professor)\.?\s/i.test(b);
+      if(aProf!==bProf) return aProf?-1:1;
+      return a.localeCompare(b,undefined,{sensitivity:"base"});
+    });
+    const membersList=sortedNames.length
+      ?sortedNames.map((n)=>`<li>${n}</li>`).join("")
       :"<li>No members listed for this point</li>";
     const members=`<div style="margin:.35rem 0 0"><strong>Members</strong><ul style="margin:.2rem 0 0;padding-left:1rem;max-height:120px;overflow:auto">${membersList}</ul></div><span style="color:#65557f">Active members: ${site.memberCount??0}</span>`;
     return `<div style="min-width:250px"><strong>${site.hospital}</strong><br><span style="color:#65557f">${site.city}</span><br><span style="color:#65557f">${labels.join(" | ")}</span>${trials}${members}</div>`;
