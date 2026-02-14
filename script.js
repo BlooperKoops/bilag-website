@@ -165,11 +165,15 @@ const initMemberMap=()=>{
     return `<div style="min-width:240px"><strong>${site.city}</strong><br><span style="color:#65557f">${hospitals}</span><br><span style="color:#65557f">${site.members.length} BILAG member(s)</span><ul style="margin:.4rem 0 0;padding-left:1rem;max-height:120px;overflow:auto">${list}</ul></div>`;
   };
 
+  const memberMarkerColor="#1f77b4";
+  const nearbyMarkerColor="#e15759";
+  const userLocationColor="#0ea5e9";
+
   const renderMap=(nearbyIds=new Set())=>{
     markersLayer.clearLayers();
     buildMemberSites().forEach((site)=>{
       const isNearby=site.members.some((m)=>nearbyIds.has(m.idx));
-      const color=isNearby?"#dd5f1a":"#7e2ec5";
+      const color=isNearby?nearbyMarkerColor:memberMarkerColor;
       const marker=L.circleMarker([site.lat,site.lng],{
         radius:7,
         color:"#ffffff",
@@ -191,7 +195,7 @@ const initMemberMap=()=>{
         radius:7,
         color:"#ffffff",
         weight:2,
-        fillColor:"#12a66a",
+        fillColor:userLocationColor,
         fillOpacity:1
       }).bindTooltip("Your searched location",{direction:"top"}).addTo(map);
     }
@@ -339,10 +343,12 @@ const initTrialMap=()=>{
   const markersLayer=L.layerGroup().addTo(map);
   let userMarker=null;
   const categoryColor={
-    coordinating:"#7e2ec5",
-    hub:"#9d63dd",
-    referral:"#5f179f"
+    coordinating:"#1f77b4",
+    hub:"#e15759",
+    referral:"#59a14f"
   };
+  const nearbyOutlineColor="#1f1f1f";
+  const userLocationColor="#0ea5e9";
   const siteKey=(site)=>`${site.hospital}|${site.city}`;
 
   const popupHtml=(site)=>{
@@ -432,7 +438,7 @@ const initTrialMap=()=>{
       const isNearby=nearbyKeys.has(site.key);
       const marker=L.circleMarker([site.lat,site.lng],{
         radius:7,
-        color:isNearby?"#dd5f1a":"#ffffff",
+        color:isNearby?nearbyOutlineColor:"#ffffff",
         weight:isNearby?3:2,
         fillColor:baseColor,
         fillOpacity:1
@@ -451,7 +457,7 @@ const initTrialMap=()=>{
         radius:7,
         color:"#ffffff",
         weight:2,
-        fillColor:"#12a66a",
+        fillColor:userLocationColor,
         fillOpacity:1
       }).bindTooltip("Your searched location",{direction:"top"}).addTo(map);
     }
