@@ -479,7 +479,7 @@ const initTrialMap=()=>{
       img.alt=`${site.hospital} icon`;
       img.loading="lazy";
       const copy=document.createElement("div");
-      copy.innerHTML=`<h4>${site.hospital}</h4><p>City: ${site.city}</p><p>BILAG members at centre: ${site.memberCount||0}</p><p>Status: Active clinical trial and referral centre</p>`;
+      copy.innerHTML=`<h4>${site.hospital}</h4><p>City: ${site.city}</p><p>BILAG members: ${site.memberCount||0}</p><p>Status: Active clinical trial and referral centre</p>`;
       if(typeof item.distance==="number"){
         const dist=document.createElement("span");
         dist.className="distance-pill";
