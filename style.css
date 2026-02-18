@@ -376,11 +376,14 @@ body[data-show-beta-warning="false"] .site-warning-banner{display:none}
   max-height:none;
   border-radius:14px;
   border:1px solid rgba(205,181,240,.72);
-  object-fit:contain;
+  object-fit:unset;
   object-position:center top;
   display:block;
   margin:0 0 1rem;
   background:rgba(243,233,255,.55);
+}
+.home-group-card{
+  overflow:visible;
 }
 .chair-card{padding:.9rem 1rem}
 .chair-layout{display:grid;grid-template-columns:180px 1fr;gap:.9rem;align-items:center}
