@@ -226,6 +226,10 @@ nav{flex:1;overflow:visible}
 .expert-item p{margin:.15rem 0;font-size:.92rem;color:var(--muted)}
 .distance-pill{display:inline-block;font-size:.82rem;font-weight:700;background:#efe3ff;color:#5f179f;padding:.2rem .5rem;border-radius:999px;margin-top:.2rem}
 .trial-summary p{margin:.35rem 0;font-size:.92rem;color:var(--muted)}
+#trial-regional-hubs .trial-summary{
+  background:linear-gradient(160deg,rgba(255,243,252,.9),rgba(244,235,255,.9));
+  border-color:rgba(210,185,238,.9);
+}
 .trial-title-row{
   display:flex;
   align-items:center;
