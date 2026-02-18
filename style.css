@@ -45,11 +45,16 @@ nav{flex:1;overflow:visible}
   align-items:center;
   min-width:max-content;
 }
-.nav-list a{font-weight:600;color:var(--muted);font-size:.84rem;white-space:nowrap}
+.nav-list a{font-weight:600;color:var(--muted);font-size:.92rem}
 .nav-list a:hover{color:var(--primary-strong)}
 .nav-list > li > a{
   display:inline-flex;
   align-items:center;
+  justify-content:center;
+  text-align:center;
+  line-height:1.2;
+  white-space:normal;
+  max-width:10.5rem;
   padding:.3rem .62rem;
   border:1px solid rgba(205,181,240,.72);
   border-radius:999px;
@@ -532,6 +537,8 @@ body[data-show-beta-warning="false"] .site-warning-banner{display:none}
   .nav-list > li{width:100%}
   .nav-list > li > a{
     width:100%;
+    max-width:none;
+    text-align:left;
     border-radius:10px;
     justify-content:flex-start;
     padding:.45rem .55rem;
