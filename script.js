@@ -87,6 +87,7 @@ const initMemberMap=()=>{
     "muhammad shipa":"./assets/Shipa picture.png",
     "anastasia madenidou":"./assets/Anastasia-Madenidou.webp",
     "edward vital":"./assets/edward vital.jpg",
+    "sheilla achieng":"./assets/sheilla achieng.jpeg",
     "ian bruce":"./assets/Ian-Bruce-600x600.png",
     "michael beresford":"./assets/800_professor_mw_beresford.jpg",
     "lucy carter":"./assets/lucy carter.jpeg",
@@ -276,7 +277,12 @@ const initMemberMap=()=>{
         Number.isFinite(Number(p.lat))&&Number.isFinite(Number(p.lng))
       ).map((p)=>({
         name:withHonorific(p.name),
-        role:(()=>{const r=typeof p.role==="string"?p.role.trim():""; return (!r||/^bilag\s+member$/i.test(r))?"Member":r;})(),
+        role:(()=>{
+          const key=normalizePersonName(p.name);
+          if(key==="edward vital") return "BILAG Chair";
+          const r=typeof p.role==="string"?p.role.trim():"";
+          return (!r||/^bilag\s+member$/i.test(r))?"Member":r;
+        })(),
         hospital:p.hospital.trim(),
         city:p.city.trim(),
         lat:Number(p.lat),
