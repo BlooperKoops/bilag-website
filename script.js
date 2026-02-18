@@ -337,6 +337,9 @@ const initTrialMap=()=>{
     "University of Oxford":"./assets/university-of-oxford-logo-0.webp",
     "Oxford University Hospitals":"./assets/university-of-oxford-logo-0.webp",
     "University of Bath":"./assets/university-of-bath-logo.webp",
+    "University of Liverpool":"./assets/university-of-liverpool-logo.webp",
+    "University of Southampton":"./assets/university-of-southampton-logo.webp",
+    "University Hospital Southampton":"./assets/university-of-southampton-logo.webp",
     "Queen's University Belfast":"./assets/queens-university-belfast-logo-570x570.webp",
     "Belfast City Hospital":"./assets/queens-university-belfast-logo-570x570.webp",
     "King's College London":"./assets/kings-college-london7355.logowik.com.webp",
@@ -354,6 +357,8 @@ const initTrialMap=()=>{
     {match:/sheffield/i,logo:"./assets/university-of-sheffield-logo-png_seeklogo-456623.webp"},
     {match:/oxford/i,logo:"./assets/university-of-oxford-logo-0.webp"},
     {match:/bath/i,logo:"./assets/university-of-bath-logo.webp"},
+    {match:/liverpool/i,logo:"./assets/university-of-liverpool-logo.webp"},
+    {match:/southampton/i,logo:"./assets/university-of-southampton-logo.webp"},
     {match:/belfast|queen'?s university/i,logo:"./assets/queens-university-belfast-logo-570x570.webp"},
     {match:/king'?s college london/i,logo:"./assets/kings-college-london7355.logowik.com.webp"}
   ];
