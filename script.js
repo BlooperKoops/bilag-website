@@ -85,7 +85,27 @@ const initMemberMap=()=>{
   const localPhotoByName={
     "jack arnold":"./Jack headshot.jpeg",
     "muhammad shipa":"./assets/Shipa picture.png",
-    "anastasia madenidou":"./assets/Anastasia-Madenidou.webp"
+    "anastasia madenidou":"./assets/Anastasia-Madenidou.webp",
+    "edward vital":"./assets/edward vital.jpg",
+    "ian bruce":"./assets/Ian-Bruce-600x600.png",
+    "lucy carter":"./assets/lucy carter.jpeg",
+    "shirish dubey":"./assets/Dr-Shirish-Dubey-Consultant Rheumatologist.jpg",
+    "sarah dyball":"./assets/sarah dyball.jpeg",
+    "christopher edwards":"./assets/Chris_Edwards.jpg_SIA_JPG_fit_to_width_INLINE.jpg",
+    "bridget griffiths":"./assets/Bridget griffiths.jpeg",
+    "caroline gordon":"./assets/gordon-caroline.jpg",
+    "david isenberg":"./assets/isenberg.jpg",
+    "peter lanyon":"./assets/peter lanyon.jpeg",
+    "zoe mclaren":"./assets/zoe-mclaren.jpg",
+    "ben parker":"./assets/Professor-Ben-Parker_Consultant-Rheumatologist-at-MFT-scaled-500x700.jpg",
+    "athiveeraramapandian prabu":"./assets/Prabu.jpeg",
+    "anisur rahman":"./assets/rahman.jpg",
+    "john a. reynolds":"./assets/john reynolds.jpg",
+    "mia rodziewicz":"./assets/mia roziewicz.jpg",
+    "eve smith":"./assets/eve smith.png",
+    "teh lee-suan teh":"./assets/Lee-Suan-Teh1-1.jpg",
+    "chris wincup":"./assets/Dr_Chris_Wincup.png",
+    "md yuzaiful md yusof":"./assets/yuz yusof.jpg"
   };
 
   const fallbackMembers=[
@@ -212,9 +232,10 @@ const initMemberMap=()=>{
       const card=document.createElement("article");
       card.className="expert-item";
       const img=document.createElement("img");
-      img.className="expert-avatar";
+      img.className=`expert-avatar${m.photo?" expert-avatar-photo":""}`;
       img.src=m.photo||avatarData(m.name);
       img.alt=`${m.name} profile`;
+      if(m.photo) img.style.objectPosition="50% 20%";
       if(/jack arnold/i.test(m.name)) img.style.objectPosition="50% 16%";
       img.loading="lazy";
       const copy=document.createElement("div");
@@ -340,6 +361,9 @@ const initTrialMap=()=>{
     "University of Liverpool":"./assets/university-of-liverpool-logo.webp",
     "University of Southampton":"./assets/university-of-southampton-logo.webp",
     "University Hospital Southampton":"./assets/university-of-southampton-logo.webp",
+    "Guy's and St Thomas' Hospital":"./assets/kings-college-london7355.logowik.com.webp",
+    "Nottingham University Hospitals":"./assets/the-university-of-nottingham-1-logo-png-transparent.png",
+    "St George's University Hospitals":"./assets/kings-college-london7355.logowik.com.webp",
     "Queen's University Belfast":"./assets/queens-university-belfast-logo-570x570.webp",
     "Belfast City Hospital":"./assets/queens-university-belfast-logo-570x570.webp",
     "King's College London":"./assets/kings-college-london7355.logowik.com.webp",
@@ -359,6 +383,9 @@ const initTrialMap=()=>{
     {match:/bath/i,logo:"./assets/university-of-bath-logo.webp"},
     {match:/liverpool/i,logo:"./assets/university-of-liverpool-logo.webp"},
     {match:/southampton/i,logo:"./assets/university-of-southampton-logo.webp"},
+    {match:/guy'?s and st thomas|guy'?s|st thomas/i,logo:"./assets/kings-college-london7355.logowik.com.webp"},
+    {match:/st george'?s/i,logo:"./assets/kings-college-london7355.logowik.com.webp"},
+    {match:/nottingham/i,logo:"./assets/the-university-of-nottingham-1-logo-png-transparent.png"},
     {match:/belfast|queen'?s university/i,logo:"./assets/queens-university-belfast-logo-570x570.webp"},
     {match:/king'?s college london/i,logo:"./assets/kings-college-london7355.logowik.com.webp"}
   ];

@@ -211,6 +211,7 @@ nav{flex:1;overflow:visible}
 .expert-results{display:grid;gap:.8rem}
 .expert-item{display:grid;grid-template-columns:58px 1fr;gap:.8rem;align-items:flex-start;padding:.85rem;border:1px solid var(--line);border-radius:12px;background:#fff}
 .expert-avatar{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #e7d4ff;background:#f4e9ff}
+.expert-avatar-photo{object-position:50% 20%}
 .expert-avatar-logo{
   object-fit:contain;
   background:#fff;
@@ -273,6 +274,17 @@ nav{flex:1;overflow:visible}
   font-weight:600;
 }
 .email-link:hover{color:#164a97}
+.site-warning-banner{
+  margin:.4rem 0 1rem;
+  padding:.7rem .85rem;
+  border-radius:12px;
+  border:1px solid #f2b565;
+  background:linear-gradient(180deg,#fff8ed,#fff2dd);
+  color:#75420a;
+  font-weight:600;
+  box-shadow:0 8px 20px rgba(199,124,36,.12);
+}
+body[data-show-beta-warning="false"] .site-warning-banner{display:none}
 .eb-hero-card{
   border:1px solid rgba(183,143,232,.7);
 }
