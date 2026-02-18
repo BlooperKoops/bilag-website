@@ -45,7 +45,7 @@ nav{flex:1;overflow:visible}
   align-items:center;
   min-width:max-content;
 }
-.nav-list a{font-weight:600;color:var(--muted);font-size:.92rem}
+.nav-list a{font-weight:600;color:var(--muted);font-size:1.02rem}
 .nav-list a:hover{color:var(--primary-strong)}
 .nav-list > li > a{
   display:inline-flex;
