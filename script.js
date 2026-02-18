@@ -95,6 +95,7 @@ const initMemberMap=()=>{
     "christopher edwards":"./assets/Chris_Edwards.jpg_SIA_JPG_fit_to_width_INLINE.jpg",
     "bridget griffiths":"./assets/Bridget griffiths.jpeg",
     "caroline gordon":"./assets/gordon-caroline.jpg",
+    "mohini gray":"./assets/mohini gray.jpeg",
     "david isenberg":"./assets/isenberg.jpg",
     "peter lanyon":"./assets/peter lanyon.jpeg",
     "zoe mclaren":"./assets/zoe-mclaren.jpg",

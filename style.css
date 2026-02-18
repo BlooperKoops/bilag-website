@@ -373,6 +373,7 @@ body[data-show-beta-warning="false"] .site-warning-banner{display:none}
 .group-photo{
   width:100%;
   height:auto;
+  max-height:none;
   border-radius:14px;
   border:1px solid rgba(205,181,240,.72);
   object-fit:contain;
