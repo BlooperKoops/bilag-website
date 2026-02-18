@@ -88,6 +88,7 @@ const initMemberMap=()=>{
     "anastasia madenidou":"./assets/Anastasia-Madenidou.webp",
     "edward vital":"./assets/edward vital.jpg",
     "ian bruce":"./assets/Ian-Bruce-600x600.png",
+    "michael beresford":"./assets/800_professor_mw_beresford.jpg",
     "lucy carter":"./assets/lucy carter.jpeg",
     "shirish dubey":"./assets/Dr-Shirish-Dubey-Consultant Rheumatologist.jpg",
     "sarah dyball":"./assets/sarah dyball.jpeg",
