@@ -1,0 +1,13 @@
+{
+  "name": "fredserve-desktop",
+  "version": "0.1.0",
+  "description": "Desktop UI for FredServe automation",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check renderer/app.js"
+  },
+  "dependencies": {
+    "electron": "^31.3.1"
+  }
+}
