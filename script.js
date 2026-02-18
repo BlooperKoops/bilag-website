@@ -320,6 +320,16 @@ const initTrialMap=()=>{
   ];
 
   const state={activeTrials,regionalHubs,referralCentres:[],userLocation:null};
+  const defaultTrustLogo="./assets/NHS Logo.png";
+  const hospitalLogoMap={
+    "Leeds Teaching Hospitals":"./assets/university-of-leeds.png",
+    "University College London Hospital":"./assets/UCL Logo.png",
+    "University College London":"./assets/UCL Logo.png",
+    "Manchester University Hospitals":"./assets/Manchester Logo.png",
+    "University of Manchester":"./assets/Manchester Logo.png",
+    "University of Leeds":"./assets/university-of-leeds.png"
+  };
+  const siteLogo=(site)=>site.logo||hospitalLogoMap[site.hospital]||defaultTrustLogo;
   const form=document.getElementById("trial-search-form");
   const addressInput=document.getElementById("trial-search-address");
   const radiusSelect=document.getElementById("trial-search-radius");
@@ -474,10 +484,16 @@ const initTrialMap=()=>{
       const card=document.createElement("article");
       card.className="expert-item";
       const img=document.createElement("img");
-      img.className="expert-avatar";
-      img.src=avatarData(site.hospital);
-      img.alt=`${site.hospital} icon`;
+      img.className="expert-avatar expert-avatar-logo";
+      img.src=siteLogo(site);
+      img.alt=`${site.hospital} logo`;
       img.loading="lazy";
+      img.onerror=()=>{
+        img.onerror=null;
+        img.className="expert-avatar";
+        img.src=avatarData(site.hospital);
+        img.alt=`${site.hospital} icon`;
+      };
       const copy=document.createElement("div");
       copy.innerHTML=`<h4>${site.hospital}</h4><p>City: ${site.city}</p><p>BILAG members: ${site.memberCount||0}</p><p>Status: Active clinical trial and referral centre</p>`;
       if(typeof item.distance==="number"){
