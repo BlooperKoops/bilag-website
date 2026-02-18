@@ -327,9 +327,41 @@ const initTrialMap=()=>{
     "University College London":"./assets/UCL Logo.png",
     "Manchester University Hospitals":"./assets/Manchester Logo.png",
     "University of Manchester":"./assets/Manchester Logo.png",
-    "University of Leeds":"./assets/university-of-leeds.png"
+    "University of Leeds":"./assets/university-of-leeds.png",
+    "University of Birmingham":"./assets/university-of-birmingham-logo-png_seeklogo-410943.webp",
+    "University Hospitals Birmingham":"./assets/university-of-birmingham-logo-png_seeklogo-410943.webp",
+    "Sandwell and West Birmingham Hospitals":"./assets/university-of-birmingham-logo-png_seeklogo-410943.webp",
+    "University of Glasgow":"./assets/university-of-glasgow-logo-png_seeklogo-145972.webp",
+    "University of Edinburgh":"./assets/university-of-edinburgh-logo-png_seeklogo-322161.webp",
+    "University of Sheffield":"./assets/university-of-sheffield-logo-png_seeklogo-456623.webp",
+    "University of Oxford":"./assets/university-of-oxford-logo-0.webp",
+    "Oxford University Hospitals":"./assets/university-of-oxford-logo-0.webp",
+    "University of Bath":"./assets/university-of-bath-logo.webp",
+    "Queen's University Belfast":"./assets/queens-university-belfast-logo-570x570.webp",
+    "Belfast City Hospital":"./assets/queens-university-belfast-logo-570x570.webp",
+    "King's College London":"./assets/kings-college-london7355.logowik.com.webp",
+    "Newcastle Upon Tyne Hospitals":"./assets/newcastle-university-logo.webp",
+    "Royal Victoria Infirmary":"./assets/newcastle-university-logo.webp"
   };
-  const siteLogo=(site)=>site.logo||hospitalLogoMap[site.hospital]||defaultTrustLogo;
+  const logoMatchers=[
+    {match:/leeds/i,logo:"./assets/university-of-leeds.png"},
+    {match:/university college london|ucl/i,logo:"./assets/UCL Logo.png"},
+    {match:/manchester/i,logo:"./assets/Manchester Logo.png"},
+    {match:/newcastle|royal victoria infirmary/i,logo:"./assets/newcastle-university-logo.webp"},
+    {match:/birmingham|sandwell/i,logo:"./assets/university-of-birmingham-logo-png_seeklogo-410943.webp"},
+    {match:/glasgow|queen elizabeth university hospital/i,logo:"./assets/university-of-glasgow-logo-png_seeklogo-145972.webp"},
+    {match:/edinburgh/i,logo:"./assets/university-of-edinburgh-logo-png_seeklogo-322161.webp"},
+    {match:/sheffield/i,logo:"./assets/university-of-sheffield-logo-png_seeklogo-456623.webp"},
+    {match:/oxford/i,logo:"./assets/university-of-oxford-logo-0.webp"},
+    {match:/bath/i,logo:"./assets/university-of-bath-logo.webp"},
+    {match:/belfast|queen'?s university/i,logo:"./assets/queens-university-belfast-logo-570x570.webp"},
+    {match:/king'?s college london/i,logo:"./assets/kings-college-london7355.logowik.com.webp"}
+  ];
+  const matchedLogo=(hospital)=>{
+    const hit=logoMatchers.find((item)=>item.match.test(hospital||""));
+    return hit?hit.logo:null;
+  };
+  const siteLogo=(site)=>site.logo||hospitalLogoMap[site.hospital]||matchedLogo(site.hospital)||defaultTrustLogo;
   const form=document.getElementById("trial-search-form");
   const addressInput=document.getElementById("trial-search-address");
   const radiusSelect=document.getElementById("trial-search-radius");
