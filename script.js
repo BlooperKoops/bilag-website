@@ -99,7 +99,7 @@ const initMemberMap=()=>{
     "mohini gray":"./assets/mohini gray.jpeg",
     "david isenberg":"./assets/isenberg.jpg",
     "peter lanyon":"./assets/peter lanyon.jpeg",
-    "zoe mclaren":"./assets/zoe-mclaren.jpg",
+    "zoe mclaren":"./assets/Zoe McLaren.jpg",
     "ben parker":"./assets/Professor-Ben-Parker_Consultant-Rheumatologist-at-MFT-scaled-500x700.jpg",
     "athiveeraramapandian prabu":"./assets/Prabu.jpeg",
     "anisur rahman":"./assets/rahman.jpg",
