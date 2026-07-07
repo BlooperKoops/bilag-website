@@ -225,6 +225,15 @@
     "photo": ""
   },
   {
+    "name": "Dr. Antony Psarras",
+    "role": "BILAG Member",
+    "hospital": "University of Oxford",
+    "city": "Oxford",
+    "lat": 51.752,
+    "lng": -1.2577,
+    "photo": ""
+  },
+  {
     "name": "Prof. Anisur Rahman",
     "role": "BILAG Member",
     "hospital": "University College London",

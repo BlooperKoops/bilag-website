@@ -110,7 +110,8 @@ const initMemberMap=()=>{
     "eve smith":"./assets/eve smith.png",
     "teh lee-suan teh":"./assets/Lee-Suan-Teh1-1.jpg",
     "chris wincup":"./assets/Dr_Chris_Wincup.png",
-    "md yuzaiful md yusof":"./assets/yuz yusof.jpg"
+    "md yuzaiful md yusof":"./assets/yuz yusof.jpg",
+    "antony psarras":"./assets/Antony.Psarras.webp"
   };
 
   const fallbackMembers=[
