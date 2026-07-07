@@ -84,17 +84,19 @@ const initMemberMap=()=>{
   );
   const localPhotoByName={
     "jack arnold":"./Jack headshot.jpeg",
+    "david d'cruz":"https://www.kcl.ac.uk/newimages/person-profile/2022b/david-dcruz.jpeg.xcaf109aa.jpg?w=160&h=172&crop=160,160,0,6&f=webp",
+    "sarah skeoch":"https://ruh.nhs.uk/RNHRD/zz_images/rheumatology/Sarah_Skeoch.jpg",
+    "elizabeth ball":"https://www.doctify.com/public/images/athena-uk/practice/logo/ms-elisabeth-ball/ms-elisabeth-ballcbdf90a0-2f3b-42c3-b279-945732220034.png",
+    "arvind kaul":"https://s3-eu-west-1.amazonaws.com/bupa-images-4b24291849b400303aea648fcd38a718/86033/d3990ad2-7a88-4590-baf1-2a4438ac6c49.png",
     "muhammad shipa":"./assets/Shipa picture.png",
     "anastasia madenidou":"./assets/Anastasia-Madenidou.webp",
     "edward vital":"./assets/edward vital.jpg",
-    "sheilla achieng":"./assets/sheilla achieng.jpeg",
     "ian bruce":"./assets/Ian-Bruce-600x600.png",
     "michael beresford":"./assets/800_professor_mw_beresford.jpg",
     "lucy carter":"./assets/lucy carter.jpeg",
     "shirish dubey":"./assets/Dr-Shirish-Dubey-Consultant Rheumatologist.jpg",
     "sarah dyball":"./assets/sarah dyball.jpeg",
     "christopher edwards":"./assets/Chris_Edwards.jpg_SIA_JPG_fit_to_width_INLINE.jpg",
-    "bridget griffiths":"./assets/Bridget griffiths.jpeg",
     "caroline gordon":"./assets/gordon-caroline.jpg",
     "mohini gray":"./assets/mohini gray.jpeg",
     "david isenberg":"./assets/isenberg.jpg",
@@ -342,7 +344,7 @@ const initTrialMap=()=>{
   ];
 
   const regionalHubs=[
-    {name:"Regional Lupus Trial Hub",phase:"Site preparation",status:"Opening soon",hospital:"Royal Victoria Infirmary",city:"Newcastle",lat:54.9783,lng:-1.6178,aim:"To expand regional recruitment into multicentre lupus interventional and translational studies.",criteria:"Adults with confirmed SLE suitable for screening into active BILAG-affiliated studies.",agents:"Agent selection aligned to currently active BILAG portfolio protocols at time of enrolment."},
+    {name:"Newcastle Trial Hub",phase:"Site preparation",status:"Opening soon",hospital:"Freeman Hospital",city:"Newcastle upon Tyne",lat:55.00257,lng:-1.59318,aim:"To expand regional recruitment into multicentre lupus interventional and translational studies.",criteria:"Adults with confirmed SLE suitable for screening into active BILAG-affiliated studies.",agents:"Agent selection aligned to currently active BILAG portfolio protocols at time of enrolment."},
     {name:"South Coast SLE Trial Unit",phase:"Early phase",status:"Recruiting",hospital:"University Hospital Southampton",city:"Southampton",lat:50.9097,lng:-1.4044,aim:"To evaluate early-phase therapeutic approaches for immune modulation in systemic lupus.",criteria:"Adults with active SLE meeting protocol laboratory, organ involvement, and treatment-history criteria.",agents:"Protocol-dependent investigational immune-modulating agents under early-phase governance."},
     {name:"Scottish Lupus Trial Node",phase:"Clinical studies",status:"Active",hospital:"Queen Elizabeth University Hospital",city:"Glasgow",lat:55.8642,lng:-4.2518,aim:"To support national trial access and harmonised disease activity measurement in Scottish centres.",criteria:"Patients with confirmed SLE eligible for active interventional or observational trial pathways.",agents:"Portfolio-dependent biologic and conventional immunosuppressive study regimens."},
     {name:"Northern Ireland Collaboration Site",phase:"Registry-linked studies",status:"Active",hospital:"Belfast City Hospital",city:"Belfast",lat:54.5973,lng:-5.9301,aim:"To integrate registry and trial workflows for improved regional lupus trial participation.",criteria:"Adults with SLE under specialist care with consent for registry linkage and protocol screening.",agents:"Registry-linked therapeutic cohorts including biologic and standard-care comparators."}
@@ -376,13 +378,14 @@ const initTrialMap=()=>{
     "Belfast City Hospital":"./assets/queens-university-belfast-logo-570x570.webp",
     "King's College London":"./assets/kings-college-london7355.logowik.com.webp",
     "Newcastle Upon Tyne Hospitals":"./assets/newcastle-university-logo.webp",
-    "Royal Victoria Infirmary":"./assets/newcastle-university-logo.webp"
+    "Royal Victoria Infirmary":"./assets/newcastle-university-logo.webp",
+    "Freeman Hospital":"./assets/newcastle-university-logo.webp"
   };
   const logoMatchers=[
     {match:/leeds/i,logo:"./assets/university-of-leeds.png"},
     {match:/university college london|ucl/i,logo:"./assets/UCL Logo.png"},
     {match:/manchester/i,logo:"./assets/Manchester Logo.png"},
-    {match:/newcastle|royal victoria infirmary/i,logo:"./assets/newcastle-university-logo.webp"},
+    {match:/newcastle|royal victoria infirmary|freeman hospital/i,logo:"./assets/newcastle-university-logo.webp"},
     {match:/birmingham|sandwell/i,logo:"./assets/university-of-birmingham-logo-png_seeklogo-410943.webp"},
     {match:/glasgow|queen elizabeth university hospital/i,logo:"./assets/university-of-glasgow-logo-png_seeklogo-145972.webp"},
     {match:/edinburgh/i,logo:"./assets/university-of-edinburgh-logo-png_seeklogo-322161.webp"},
@@ -408,7 +411,6 @@ const initTrialMap=()=>{
   const status=document.getElementById("trial-search-status");
   const results=document.getElementById("trial-results");
   const summaries=document.getElementById("trial-summaries");
-  const hubs=document.getElementById("trial-regional-hubs");
 
   if(!ensureLeaflet()){
     status.textContent="Map library failed to load. Please refresh the page.";
@@ -593,17 +595,6 @@ const initTrialMap=()=>{
     });
   };
 
-  const renderRegionalHubs=()=>{
-    if(!hubs) return;
-    hubs.innerHTML="";
-    state.regionalHubs.forEach((site)=>{
-      const card=document.createElement("article");
-      card.className="card trial-summary";
-      card.innerHTML=`<h3>${site.name}</h3><p><strong>Study type:</strong> ${site.phase}</p><p><strong>Status:</strong> ${site.status}</p><p><strong>Hospital:</strong> ${site.hospital}</p><p><strong>Location:</strong> ${site.city}</p><p><strong>Active members:</strong> ${site.memberCount??0}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment:</strong> ${site.criteria}</p><p><strong>Agents:</strong> ${site.agents}</p>`;
-      hubs.appendChild(card);
-    });
-  };
-
   const applySiteMemberCounts=()=>{
     const byHospitalCity=new Map(
       state.referralCentres.map((c)=>[`${c.hospital}|${c.city}`,c.memberCount||0])
@@ -690,7 +681,6 @@ const initTrialMap=()=>{
     applySiteMemberCounts();
     renderResults(state.referralCentres.map((site)=>({site})));
     renderSummaries();
-    renderRegionalHubs();
     renderMap();
   };
   init();
@@ -699,81 +689,6 @@ const initTrialMap=()=>{
 initMemberMap();
 initTrialMap();
 
-const initNewsletterPage=()=>{
-  const signupForm=document.getElementById("newsletter-signup-form");
-  const adminPanel=document.getElementById("newsletter-admin-panel");
-  const logoutBtn=document.getElementById("newsletter-admin-logout");
-  const uploadInput=document.getElementById("newsletter-upload");
-  const list=document.getElementById("newsletter-list");
-  const status=document.getElementById("newsletter-signup-status");
-  if(!signupForm||!status) return;
-
-  const ADMIN_STORAGE_KEY="bilag_newsletter_admin";
-  const ADMIN_ACCESS_CODE="BILAG-Admin-Upload";
-  const urlParams=new URLSearchParams(window.location.search);
-  let isAdmin=window.localStorage.getItem(ADMIN_STORAGE_KEY)==="1";
-
-  if(urlParams.get("admin")==="1"&&!isAdmin){
-    const entered=window.prompt("Admin access code");
-    if(entered===ADMIN_ACCESS_CODE){
-      isAdmin=true;
-      window.localStorage.setItem(ADMIN_STORAGE_KEY,"1");
-    }
-  }
-
-  if(adminPanel){
-    adminPanel.style.display=isAdmin?"block":"none";
-  }
-
-  signupForm.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    const nameField=document.getElementById("newsletter-name");
-    const emailField=document.getElementById("newsletter-email");
-    const fullName=nameField?nameField.value.trim():"";
-    const email=emailField?emailField.value.trim():"";
-    if(!fullName||!email){
-      status.textContent="Please complete name and email to join the newsletter.";
-      status.style.color="#b03a1b";
-      return;
-    }
-    const subject=encodeURIComponent("BILAG Newsletter Signup");
-    const body=encodeURIComponent(`Please add the following person to the BILAG newsletter list:\n\nName: ${fullName}\nEmail: ${email}`);
-    window.location.href=`mailto:ContactBILAG@proton.me?subject=${subject}&body=${body}`;
-    status.textContent="Opening your email app to complete signup.";
-    status.style.color="";
-    signupForm.reset();
-  });
-
-  if(!isAdmin||!uploadInput||!list) return;
-
-  uploadInput.addEventListener("change",()=>{
-    const files=Array.from(uploadInput.files||[]);
-    if(!files.length) return;
-    const empty=list.querySelector(".meta-text");
-    if(empty) empty.remove();
-    files.forEach((file)=>{
-      const item=document.createElement("li");
-      const link=document.createElement("a");
-      link.href=URL.createObjectURL(file);
-      link.textContent=file.name;
-      link.target="_blank";
-      link.rel="noopener noreferrer";
-      link.download=file.name;
-      item.appendChild(link);
-      list.appendChild(item);
-    });
-    uploadInput.value="";
-  });
-
-  if(logoutBtn){
-    logoutBtn.addEventListener("click",()=>{
-      window.localStorage.removeItem(ADMIN_STORAGE_KEY);
-      window.location.href="./newsletter.html";
-    });
-  }
-};
-
-initNewsletterPage();
 
 const publicationList=document.getElementById("publication-list");
 if(publicationList){

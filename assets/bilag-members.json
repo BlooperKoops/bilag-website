@@ -9,15 +9,6 @@
     "photo": ""
   },
   {
-    "name": "Dr. Sheilla Achieng",
-    "role": "BILAG Member",
-    "hospital": "University of Liverpool",
-    "city": "Liverpool",
-    "lat": 53.4084,
-    "lng": -2.9916,
-    "photo": ""
-  },
-  {
     "name": "Dr. Jack Arnold",
     "role": "BILAG Member",
     "hospital": "University of Leeds",
@@ -74,10 +65,10 @@
   {
     "name": "Dr. Lucy Carter",
     "role": "BILAG Member",
-    "hospital": "Newcastle Upon Tyne Hospitals",
+    "hospital": "Freeman Hospital",
     "city": "Newcastle upon Tyne",
-    "lat": 54.9783,
-    "lng": -1.6178,
+    "lat": 55.00257,
+    "lng": -1.59318,
     "photo": ""
   },
   {
@@ -153,15 +144,6 @@
     "photo": ""
   },
   {
-    "name": "Prof. Bridget Griffiths",
-    "role": "BILAG Member",
-    "hospital": "Newcastle Upon Tyne Hospitals",
-    "city": "Newcastle upon Tyne",
-    "lat": 54.9783,
-    "lng": -1.6178,
-    "photo": ""
-  },
-  {
     "name": "Prof. Caroline Gordon",
     "role": "BILAG Member",
     "hospital": "University of Birmingham",
@@ -204,6 +186,15 @@
     "city": "Manchester",
     "lat": 53.4808,
     "lng": -2.2426,
+    "photo": ""
+  },
+  {
+    "name": "Dr. Stephen McDonald",
+    "role": "BILAG Member",
+    "hospital": "Western Health and Social Care Trust",
+    "city": "Derry",
+    "lat": 54.9966,
+    "lng": -7.3086,
     "photo": ""
   },
   {
