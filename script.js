@@ -133,7 +133,8 @@ const initMemberMap=()=>{
     "teh lee-suan teh":"./assets/Lee-Suan-Teh1-1.jpg",
     "chris wincup":"./assets/Dr_Chris_Wincup.png",
     "md yuzaiful md yusof":"./assets/yuz yusof.jpg",
-    "antony psarras":"./assets/Antony.Psarras.webp"
+    "antony psarras":"./assets/Antony.Psarras.webp",
+    "bridget griffiths":"./assets/Bridget griffiths.jpeg"
   };
 
   const fallbackMembers=[

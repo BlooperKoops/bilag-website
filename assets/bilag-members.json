@@ -1,353 +1,380 @@
 [
-  {
-    "name": "Prof. Edward Vital",
-    "role": "BILAG Chair",
-    "hospital": "University of Leeds",
-    "city": "Leeds",
-    "lat": 53.8067,
-    "lng": -1.555,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Jack Arnold",
-    "role": "BILAG Member",
-    "hospital": "University of Leeds",
-    "city": "Leeds",
-    "lat": 53.8067,
-    "lng": -1.555,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Yasmeen Ahmad",
-    "role": "BILAG Member",
-    "hospital": "Wales NHS",
-    "city": "Cardiff",
-    "lat": 51.4816,
-    "lng": -3.1791,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Mohammed Akil",
-    "role": "BILAG Member",
-    "hospital": "University of Sheffield",
-    "city": "Sheffield",
-    "lat": 53.3811,
-    "lng": -1.4701,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Elizabeth Ball",
-    "role": "BILAG Member",
-    "hospital": "Belfast City Hospital",
-    "city": "Belfast",
-    "lat": 54.5973,
-    "lng": -5.9301,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Michael Beresford",
-    "role": "BILAG Member",
-    "hospital": "University of Liverpool",
-    "city": "Liverpool",
-    "lat": 53.4084,
-    "lng": -2.9916,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Ian Bruce",
-    "role": "BILAG Member",
-    "hospital": "University of Manchester",
-    "city": "Manchester",
-    "lat": 53.4808,
-    "lng": -2.2426,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Lucy Carter",
-    "role": "BILAG Member",
-    "hospital": "Freeman Hospital",
-    "city": "Newcastle upon Tyne",
-    "lat": 55.00257,
-    "lng": -1.59318,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Shouvik Dass",
-    "role": "BILAG Member",
-    "hospital": "University of Leeds",
-    "city": "Leeds",
-    "lat": 53.8008,
-    "lng": -1.5491,
-    "photo": ""
-  },
-  {
-    "name": "Prof. David D'Cruz",
-    "role": "BILAG Member",
-    "hospital": "Guy's and St Thomas' Hospital",
-    "city": "London",
-    "lat": 51.498,
-    "lng": -0.1187,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Shirish Dubey",
-    "role": "BILAG Member",
-    "hospital": "Oxford University Hospitals",
-    "city": "Oxford",
-    "lat": 51.752,
-    "lng": -1.2577,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Sarah Dyball",
-    "role": "BILAG Member",
-    "hospital": "University of Manchester",
-    "city": "Manchester",
-    "lat": 53.4808,
-    "lng": -2.2426,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Christopher Edwards",
-    "role": "BILAG Member",
-    "hospital": "University of Southampton",
-    "city": "Southampton",
-    "lat": 50.9097,
-    "lng": -1.4044,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Michael Ehrenstein",
-    "role": "BILAG Member",
-    "hospital": "University College London",
-    "city": "London",
-    "lat": 51.5246,
-    "lng": -0.134,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Michelle Fernando",
-    "role": "BILAG Member",
-    "hospital": "Guy's and St Thomas' Hospital",
-    "city": "London",
-    "lat": 51.498,
-    "lng": -0.1187,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Mohini Gray",
-    "role": "BILAG Member",
-    "hospital": "University of Edinburgh",
-    "city": "Edinburgh",
-    "lat": 55.9533,
-    "lng": -3.1883,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Caroline Gordon",
-    "role": "BILAG Member",
-    "hospital": "University of Birmingham",
-    "city": "Birmingham",
-    "lat": 52.4862,
-    "lng": -1.8904,
-    "photo": ""
-  },
-  {
-    "name": "Prof. David Isenberg",
-    "role": "BILAG Member",
-    "hospital": "University College London",
-    "city": "London",
-    "lat": 51.5246,
-    "lng": -0.134,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Arvind Kaul",
-    "role": "BILAG Member",
-    "hospital": "St George's University Hospitals",
-    "city": "London",
-    "lat": 51.4261,
-    "lng": -0.1732,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Peter Lanyon",
-    "role": "BILAG Member",
-    "hospital": "Nottingham University Hospitals",
-    "city": "Nottingham",
-    "lat": 52.9548,
-    "lng": -1.1581,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Anastasia Madenidou",
-    "role": "BILAG Member",
-    "hospital": "University of Manchester",
-    "city": "Manchester",
-    "lat": 53.4808,
-    "lng": -2.2426,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Stephen McDonald",
-    "role": "BILAG Member",
-    "hospital": "Western Health and Social Care Trust",
-    "city": "Derry",
-    "lat": 54.9966,
-    "lng": -7.3086,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Zoe McLaren",
-    "role": "BILAG Member",
-    "hospital": "University of Liverpool",
-    "city": "Liverpool",
-    "lat": 53.4084,
-    "lng": -2.9916,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Ben Parker",
-    "role": "BILAG Member",
-    "hospital": "Manchester University Hospitals",
-    "city": "Manchester",
-    "lat": 53.4808,
-    "lng": -2.2426,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Athiveeraramapandian Prabu",
-    "role": "BILAG Member",
-    "hospital": "Sandwell and West Birmingham Hospitals",
-    "city": "Birmingham",
-    "lat": 52.4862,
-    "lng": -1.8904,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Antony Psarras",
-    "role": "BILAG Member",
-    "hospital": "University of Oxford",
-    "city": "Oxford",
-    "lat": 51.752,
-    "lng": -1.2577,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Anisur Rahman",
-    "role": "BILAG Member",
-    "hospital": "University College London",
-    "city": "London",
-    "lat": 51.5246,
-    "lng": -0.134,
-    "photo": ""
-  },
-  {
-    "name": "Dr. John A. Reynolds",
-    "role": "BILAG Member",
-    "hospital": "University of Birmingham",
-    "city": "Birmingham",
-    "lat": 52.4862,
-    "lng": -1.8904,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Mia Rodziewicz",
-    "role": "BILAG Member",
-    "hospital": "University of Manchester",
-    "city": "Manchester",
-    "lat": 53.4808,
-    "lng": -2.2426,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Ben Rhodes",
-    "role": "BILAG Member",
-    "hospital": "University Hospitals Birmingham",
-    "city": "Birmingham",
-    "lat": 52.4862,
-    "lng": -1.8904,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Ceril Rhys-Dillon",
-    "role": "BILAG Member",
-    "hospital": "Wales NHS",
-    "city": "Cardiff",
-    "lat": 51.4816,
-    "lng": -3.1791,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Claire Riddell",
-    "role": "BILAG Member",
-    "hospital": "Queen's University Belfast",
-    "city": "Belfast",
-    "lat": 54.5973,
-    "lng": -5.9301,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Muhammad Shipa",
-    "role": "BILAG Member",
-    "hospital": "University College London",
-    "city": "London",
-    "lat": 51.5246,
-    "lng": -0.134,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Sarah Skeoch",
-    "role": "BILAG Member",
-    "hospital": "University of Bath",
-    "city": "Bath",
-    "lat": 51.3811,
-    "lng": -2.359,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Eve Smith",
-    "role": "BILAG Member",
-    "hospital": "University of Glasgow",
-    "city": "Glasgow",
-    "lat": 55.8642,
-    "lng": -4.2518,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Emily Sutton",
-    "role": "BILAG Member",
-    "hospital": "University of Manchester",
-    "city": "Manchester",
-    "lat": 53.4808,
-    "lng": -2.2426,
-    "photo": ""
-  },
-  {
-    "name": "Prof. Teh Lee-Suan Teh",
-    "role": "BILAG Member",
-    "hospital": "East Lancashire Hospitals",
-    "city": "Blackburn",
-    "lat": 53.7486,
-    "lng": -2.4875,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Chris Wincup",
-    "role": "BILAG Member",
-    "hospital": "King's College London",
-    "city": "London",
-    "lat": 51.5072,
-    "lng": -0.1276,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Md Yuzaiful Md Yusof",
-    "role": "BILAG Member",
-    "hospital": "University of Leeds",
-    "city": "Leeds",
-    "lat": 53.8067,
-    "lng": -1.555,
-    "photo": ""
-  }
+ {
+  "name": "Prof. Edward Vital",
+  "role": "BILAG Chair",
+  "hospital": "University of Leeds",
+  "city": "Leeds",
+  "lat": 53.8067,
+  "lng": -1.555,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Jack Arnold",
+  "role": "BILAG Member",
+  "hospital": "University of Leeds",
+  "city": "Leeds",
+  "lat": 53.8067,
+  "lng": -1.555,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Yasmeen Ahmad",
+  "role": "BILAG Member",
+  "hospital": "Wales NHS",
+  "city": "Cardiff",
+  "lat": 51.4816,
+  "lng": -3.1791,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Elizabeth Ball",
+  "role": "BILAG Member",
+  "hospital": "Belfast City Hospital",
+  "city": "Belfast",
+  "lat": 54.5973,
+  "lng": -5.9301,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Michael Beresford",
+  "role": "BILAG Member",
+  "hospital": "University of Liverpool",
+  "city": "Liverpool",
+  "lat": 53.4084,
+  "lng": -2.9916,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Ian Bruce",
+  "role": "BILAG Member",
+  "hospital": "University of Manchester",
+  "city": "Manchester",
+  "lat": 53.4808,
+  "lng": -2.2426,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Lucy Carter",
+  "role": "BILAG Member",
+  "hospital": "Freeman Hospital",
+  "city": "Newcastle upon Tyne",
+  "lat": 55.00257,
+  "lng": -1.59318,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Shouvik Dass",
+  "role": "BILAG Member",
+  "hospital": "University of Leeds",
+  "city": "Leeds",
+  "lat": 53.8008,
+  "lng": -1.5491,
+  "photo": ""
+ },
+ {
+  "name": "Prof. David D'Cruz",
+  "role": "BILAG Member",
+  "hospital": "Guy's and St Thomas' Hospital",
+  "city": "London",
+  "lat": 51.498,
+  "lng": -0.1187,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Shirish Dubey",
+  "role": "BILAG Member",
+  "hospital": "Oxford University Hospitals",
+  "city": "Oxford",
+  "lat": 51.752,
+  "lng": -1.2577,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Sarah Dyball",
+  "role": "BILAG Member",
+  "hospital": "University of Manchester",
+  "city": "Manchester",
+  "lat": 53.4808,
+  "lng": -2.2426,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Christopher Edwards",
+  "role": "BILAG Member",
+  "hospital": "University of Southampton",
+  "city": "Southampton",
+  "lat": 50.9097,
+  "lng": -1.4044,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Michael Ehrenstein",
+  "role": "BILAG Member",
+  "hospital": "University College London",
+  "city": "London",
+  "lat": 51.5246,
+  "lng": -0.134,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Michelle Fernando",
+  "role": "BILAG Member",
+  "hospital": "Guy's and St Thomas' Hospital",
+  "city": "London",
+  "lat": 51.498,
+  "lng": -0.1187,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Mohini Gray",
+  "role": "BILAG Member",
+  "hospital": "University of Edinburgh",
+  "city": "Edinburgh",
+  "lat": 55.9533,
+  "lng": -3.1883,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Caroline Gordon",
+  "role": "BILAG Member",
+  "hospital": "University of Birmingham",
+  "city": "Birmingham",
+  "lat": 52.4862,
+  "lng": -1.8904,
+  "photo": ""
+ },
+ {
+  "name": "Prof. David Isenberg",
+  "role": "BILAG Member",
+  "hospital": "University College London",
+  "city": "London",
+  "lat": 51.5246,
+  "lng": -0.134,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Arvind Kaul",
+  "role": "BILAG Member",
+  "hospital": "St George's University Hospitals",
+  "city": "London",
+  "lat": 51.4261,
+  "lng": -0.1732,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Peter Lanyon",
+  "role": "BILAG Member",
+  "hospital": "Nottingham University Hospitals",
+  "city": "Nottingham",
+  "lat": 52.9548,
+  "lng": -1.1581,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Anastasia Madenidou",
+  "role": "BILAG Member",
+  "hospital": "University of Manchester",
+  "city": "Manchester",
+  "lat": 53.4808,
+  "lng": -2.2426,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Stephen McDonald",
+  "role": "BILAG Member",
+  "hospital": "Western Health and Social Care Trust",
+  "city": "Derry",
+  "lat": 54.9966,
+  "lng": -7.3086,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Zoe McLaren",
+  "role": "BILAG Member",
+  "hospital": "University of Liverpool",
+  "city": "Liverpool",
+  "lat": 53.4084,
+  "lng": -2.9916,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Ben Parker",
+  "role": "BILAG Member",
+  "hospital": "Manchester University Hospitals",
+  "city": "Manchester",
+  "lat": 53.4808,
+  "lng": -2.2426,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Athiveeraramapandian Prabu",
+  "role": "BILAG Member",
+  "hospital": "Sandwell and West Birmingham Hospitals",
+  "city": "Birmingham",
+  "lat": 52.4862,
+  "lng": -1.8904,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Antony Psarras",
+  "role": "BILAG Member",
+  "hospital": "University of Oxford",
+  "city": "Oxford",
+  "lat": 51.752,
+  "lng": -1.2577,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Anisur Rahman",
+  "role": "BILAG Member",
+  "hospital": "University College London",
+  "city": "London",
+  "lat": 51.5246,
+  "lng": -0.134,
+  "photo": ""
+ },
+ {
+  "name": "Dr. John A. Reynolds",
+  "role": "BILAG Member",
+  "hospital": "University of Birmingham",
+  "city": "Birmingham",
+  "lat": 52.4862,
+  "lng": -1.8904,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Mia Rodziewicz",
+  "role": "BILAG Member",
+  "hospital": "University of Manchester",
+  "city": "Manchester",
+  "lat": 53.4808,
+  "lng": -2.2426,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Ben Rhodes",
+  "role": "BILAG Member",
+  "hospital": "University Hospitals Birmingham",
+  "city": "Birmingham",
+  "lat": 52.4862,
+  "lng": -1.8904,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Ceril Rhys-Dillon",
+  "role": "BILAG Member",
+  "hospital": "Wales NHS",
+  "city": "Cardiff",
+  "lat": 51.4816,
+  "lng": -3.1791,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Claire Riddell",
+  "role": "BILAG Member",
+  "hospital": "Queen's University Belfast",
+  "city": "Belfast",
+  "lat": 54.5973,
+  "lng": -5.9301,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Muhammad Shipa",
+  "role": "BILAG Member",
+  "hospital": "University College London",
+  "city": "London",
+  "lat": 51.5246,
+  "lng": -0.134,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Sarah Skeoch",
+  "role": "BILAG Member",
+  "hospital": "University of Bath",
+  "city": "Bath",
+  "lat": 51.3811,
+  "lng": -2.359,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Eve Smith",
+  "role": "BILAG Member",
+  "hospital": "University of Glasgow",
+  "city": "Glasgow",
+  "lat": 55.8642,
+  "lng": -4.2518,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Emily Sutton",
+  "role": "BILAG Member",
+  "hospital": "University of Manchester",
+  "city": "Manchester",
+  "lat": 53.4808,
+  "lng": -2.2426,
+  "photo": ""
+ },
+ {
+  "name": "Prof. Teh Lee-Suan Teh",
+  "role": "BILAG Member",
+  "hospital": "East Lancashire Hospitals",
+  "city": "Blackburn",
+  "lat": 53.7486,
+  "lng": -2.4875,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Chris Wincup",
+  "role": "BILAG Member",
+  "hospital": "King's College London",
+  "city": "London",
+  "lat": 51.5072,
+  "lng": -0.1276,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Md Yuzaiful Md Yusof",
+  "role": "BILAG Member",
+  "hospital": "University of Leeds",
+  "city": "Leeds",
+  "lat": 53.8067,
+  "lng": -1.555,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Bridget Griffiths",
+  "role": "BILAG Member",
+  "hospital": "Newcastle upon Tyne Hospitals NHS Foundation Trust",
+  "city": "Newcastle upon Tyne",
+  "lat": 54.9783,
+  "lng": -1.6178,
+  "photo": "./assets/Bridget griffiths.jpeg"
+ },
+ {
+  "name": "Dr. Chee-Seng Yee",
+  "role": "BILAG Member",
+  "hospital": "Doncaster and Bassetlaw NHS Foundation Trust",
+  "city": "Doncaster",
+  "lat": 53.5228,
+  "lng": -1.1285,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Helen Harris",
+  "role": "BILAG Member",
+  "hospital": "NHS Lothian",
+  "city": "Edinburgh",
+  "lat": 55.9533,
+  "lng": -3.1883,
+  "photo": ""
+ },
+ {
+  "name": "Dr. Megan Rutter",
+  "role": "BILAG Member",
+  "hospital": "Sandwell and West Birmingham Hospitals NHS Trust",
+  "city": "Birmingham",
+  "lat": 52.4862,
+  "lng": -1.8904,
+  "photo": ""
+ }
 ]

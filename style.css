@@ -566,3 +566,11 @@ main:focus{outline:none}
 @media (max-width:960px){
   .contact-grid{grid-template-columns:1fr}
 }
+
+/* Member list (membership page) */
+.member-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem 1.25rem}
+.member-list li{display:flex;flex-direction:column;padding:.6rem .75rem;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff}
+.member-name{font-weight:600}
+.member-org{font-size:.86rem;color:var(--muted);line-height:1.35}
+@media (max-width:960px){.member-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.member-list{grid-template-columns:1fr}}
