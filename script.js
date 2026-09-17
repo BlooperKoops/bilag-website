@@ -75,7 +75,7 @@ const avatarData=(name)=>{
 };
 
 const geocodeAddress=async(address)=>{
-  const url=`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb&email=ContactBILAG%40proton.me&q=${encodeURIComponent(address)}`;
+  const url=`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb&q=${encodeURIComponent(address)}`;
   const res=await fetch(url,{headers:{"Accept":"application/json"}});
   if(!res.ok) throw new Error("Geocoding service unavailable");
   const data=await res.json();
