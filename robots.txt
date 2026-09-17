@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /_previous-version/
+
+Sitemap: https://www.bilag.org.uk/sitemap.xml

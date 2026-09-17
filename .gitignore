@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Local backup of the pre-redesign site
+_previous-version/
+
+# Local tooling / not part of the website
+start-demo.command
+unified-lupus-automation.n8n.json
+
+# Unused large files that live in the folder but aren't part of the site
+assets/IriunWebcam-2.9.1.pkg
+assets/s41586-025-10072-4.pdf
+assets/DMARD_followup_subjects.xlsx
+assets/*conflicted copy*

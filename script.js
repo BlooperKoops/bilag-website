@@ -46,6 +46,19 @@ document.querySelectorAll(".nav-dropdown .dropdown-toggle").forEach((toggle)=>{
   });
 });
 
+document.addEventListener("keydown",(e)=>{
+  if(e.key!=="Escape") return;
+  document.querySelectorAll(".nav-dropdown.open").forEach((item)=>{
+    item.classList.remove("open");
+    const itemBtn=item.querySelector(".dropdown-toggle");
+    if(itemBtn) itemBtn.setAttribute("aria-expanded","false");
+  });
+  if(nav&&nav.classList.contains("open")){
+    nav.classList.remove("open");
+    if(btn) btn.setAttribute("aria-expanded","false");
+  }
+});
+
 const toRad=(d)=>d*Math.PI/180;
 const distanceKm=(a,b)=>{
   const R=6371;
@@ -62,7 +75,7 @@ const avatarData=(name)=>{
 };
 
 const geocodeAddress=async(address)=>{
-  const url=`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb&q=${encodeURIComponent(address)}`;
+  const url=`https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb&email=ContactBILAG%40proton.me&q=${encodeURIComponent(address)}`;
   const res=await fetch(url,{headers:{"Accept":"application/json"}});
   if(!res.ok) throw new Error("Geocoding service unavailable");
   const data=await res.json();
@@ -71,6 +84,15 @@ const geocodeAddress=async(address)=>{
 };
 
 const ensureLeaflet=()=>typeof window.L!=="undefined";
+
+const getBrowserLocation=()=>new Promise((resolve,reject)=>{
+  if(!("geolocation" in navigator)){reject(new Error("Location is not supported by this browser"));return;}
+  navigator.geolocation.getCurrentPosition(
+    (pos)=>resolve({lat:pos.coords.latitude,lng:pos.coords.longitude,label:"your current location"}),
+    (err)=>reject(new Error(err.code===1?"Location access was declined":"Could not determine your location")),
+    {enableHighAccuracy:false,timeout:10000,maximumAge:300000}
+  );
+});
 
 const initMemberMap=()=>{
   const mapElement=document.getElementById("uk-map");
@@ -83,7 +105,7 @@ const initMemberMap=()=>{
       .trim()
   );
   const localPhotoByName={
-    "jack arnold":"./Jack headshot.jpeg",
+    "jack arnold":"./assets/jack-arnold.jpeg",
     "david d'cruz":"https://www.kcl.ac.uk/newimages/person-profile/2022b/david-dcruz.jpeg.xcaf109aa.jpg?w=160&h=172&crop=160,160,0,6&f=webp",
     "sarah skeoch":"https://ruh.nhs.uk/RNHRD/zz_images/rheumatology/Sarah_Skeoch.jpg",
     "elizabeth ball":"https://www.doctify.com/public/images/athena-uk/practice/logo/ms-elisabeth-ball/ms-elisabeth-ballcbdf90a0-2f3b-42c3-b279-945732220034.png",
@@ -307,14 +329,11 @@ const initMemberMap=()=>{
     showDefault();
   };
 
-  form.addEventListener("submit",async(e)=>{
-    e.preventDefault();
-    const address=addressInput.value.trim();
-    if(!address) return;
+  const runMemberSearch=async(locate)=>{
     status.textContent="Searching location and matching nearby members...";
     status.style.color="";
     try{
-      const loc=await geocodeAddress(address);
+      const loc=await locate();
       state.userLocation={lat:loc.lat,lng:loc.lng};
       const radius=Number(radiusSelect.value)||50;
       const nearby=state.members
@@ -326,11 +345,24 @@ const initMemberMap=()=>{
       status.textContent=`Showing ${nearby.length} member(s) within ${radius} km of ${loc.label}.`;
       map.flyTo([state.userLocation.lat,state.userLocation.lng],7,{duration:0.6});
     }catch(err){
-      status.textContent=`Could not locate that address. Try a UK postcode or town. (${err.message})`;
+      status.textContent=`Could not find that location. Try a UK postcode or town. (${err.message})`;
       status.style.color="#b03a1b";
       renderMap();
     }
+  };
+  form.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const address=addressInput.value.trim();
+    if(!address) return;
+    runMemberSearch(()=>geocodeAddress(address));
   });
+  const locateBtn=document.getElementById("locate-me");
+  if(locateBtn){
+    locateBtn.addEventListener("click",()=>{
+      addressInput.value="";
+      runMemberSearch(getBrowserLocation);
+    });
+  }
 
   loadDefaultMembers();
 };
@@ -652,14 +684,11 @@ const initTrialMap=()=>{
     }
   };
 
-  form.addEventListener("submit",async(e)=>{
-    e.preventDefault();
-    const address=addressInput.value.trim();
-    if(!address) return;
+  const runTrialSearch=async(locate)=>{
     status.textContent="Searching location and matching nearby trial sites...";
     status.style.color="";
     try{
-      const loc=await geocodeAddress(address);
+      const loc=await locate();
       state.userLocation={lat:loc.lat,lng:loc.lng};
       const radius=Number(radiusSelect.value)||50;
       const nearby=state.referralCentres
@@ -671,11 +700,24 @@ const initTrialMap=()=>{
       status.textContent=`Showing ${nearby.length} referral centre(s) within ${radius} km of ${loc.label}.`;
       map.flyTo([state.userLocation.lat,state.userLocation.lng],7,{duration:0.6});
     }catch(err){
-      status.textContent=`Could not locate that address. Try a UK postcode or town. (${err.message})`;
+      status.textContent=`Could not find that location. Try a UK postcode or town. (${err.message})`;
       status.style.color="#b03a1b";
       renderMap();
     }
+  };
+  form.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const address=addressInput.value.trim();
+    if(!address) return;
+    runTrialSearch(()=>geocodeAddress(address));
   });
+  const locateBtn=document.getElementById("trial-locate-me");
+  if(locateBtn){
+    locateBtn.addEventListener("click",()=>{
+      addressInput.value="";
+      runTrialSearch(getBrowserLocation);
+    });
+  }
 
   const init=async()=>{
     state.referralCentres=await buildReferralCentres();
@@ -774,11 +816,6 @@ if(publicationList){
     const match=(url||"").match(/pubmed\.ncbi\.nlm\.nih\.gov\/(\d+)/i);
     return match?match[1]:"PubMed";
   };
-  const fallbackThumb=(pub)=>{
-    const pmid=pmidFromUrl(pub.url);
-    const label=encodeURIComponent(`PMID ${pmid}`);
-    return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='240' viewBox='0 0 420 240'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%23ede0ff'/><stop offset='100%' stop-color='%23d7c0ff'/></linearGradient></defs><rect width='420' height='240' rx='16' fill='url(%23g)'/><rect x='24' y='24' width='372' height='56' rx='10' fill='%23611db0' opacity='.86'/><text x='42' y='58' font-family='Arial' font-size='18' font-weight='700' fill='white'>PubMed</text><text x='42' y='132' font-family='Arial' font-size='26' font-weight='700' fill='%23351a58'>${label}</text><text x='42' y='170' font-family='Arial' font-size='14' fill='%235f4d7f'>Selected BILAG publication</text></svg>`;
-  };
 
   const render=()=>{
     if(!publications.length){
@@ -800,29 +837,34 @@ if(publicationList){
     ordered.forEach((pub)=>{
       const card=document.createElement("article");
       card.className="publication-item";
-      const img=document.createElement("img");
-      img.className="publication-thumb";
-      img.src=pub.image || `https://image.thum.io/get/width/420/crop/240/noanimate/${pub.url}`;
-      img.alt=`Preview for ${pub.title || pub.url}`;
-      img.loading="lazy";
-      img.onerror=()=>{img.onerror=null;img.src=fallbackThumb(pub);};
-      const copy=document.createElement("div");
+      const meta=document.createElement("div");
+      meta.className="publication-meta";
+      const year=String(pub.date||"").trim().split(/\s+/)[0];
+      if(year){
+        const y=document.createElement("span");
+        y.className="publication-year";
+        y.textContent=year;
+        meta.appendChild(y);
+      }
+      if(pub.journal){
+        const j=document.createElement("span");
+        j.className="publication-journal";
+        j.textContent=pub.journal;
+        meta.appendChild(j);
+      }
       const h=document.createElement("h4");
       h.textContent=pub.title || toDomain(pub.url);
       const author=document.createElement("p");
+      author.className="publication-authors";
       author.textContent=pub.authors || "Author details on PubMed";
-      const journal=document.createElement("p");
-      journal.textContent=[pub.journal,pub.date].filter(Boolean).join(" | ");
-      const src=document.createElement("p");
-      src.textContent=toDomain(pub.url);
       const a=document.createElement("a");
       a.className="publication-link";
       a.href=pub.url;
       a.target="_blank";
       a.rel="noopener noreferrer";
-      a.textContent=pub.url;
-      copy.append(h,author,journal,src,a);
-      card.append(img,copy);
+      const pmid=pmidFromUrl(pub.url);
+      a.textContent=pmid==="PubMed"?`View on ${toDomain(pub.url)} \u2192`:`View on PubMed (PMID ${pmid}) \u2192`;
+      card.append(meta,h,author,a);
       publicationList.appendChild(card);
     });
   };
