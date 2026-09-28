@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.bilag.org.uk/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.bilag.org.uk/active-projects.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/bilag-trainer.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/membership.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/bilag-br.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/easybilag-digital.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/education-events.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/history-of-bilag.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/patients-carers.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/publications.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/find-expert.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/trial-opportunities.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://www.bilag.org.uk/contact.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://bilag.co.uk/active-projects.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/bilag-trainer.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/membership.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/bilag-br.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/easybilag-digital.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/education-events.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/history-of-bilag.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/patients-carers.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/publications.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/find-expert.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/trial-opportunities.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bilag.co.uk/contact.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /_previous-version/
 
-Sitemap: https://www.bilag.org.uk/sitemap.xml
+Sitemap: https://bilag.co.uk/sitemap.xml

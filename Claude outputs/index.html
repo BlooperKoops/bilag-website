@@ -1,0 +1,1012 @@
+<title>Steroid Taper Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --bg:#f8f6ff;
+    --surface:#ffffff;
+    --soft:#f2ebff;
+    --soft-strong:#e9dcff;
+    --text:#241534;
+    --muted:#65557f;
+    --primary:#7e2ec5;
+    --primary-strong:#5f179f;
+    --primary-tint:rgba(126,46,197,.08);
+    --line:#e4daf7;
+    --line-strong:#cdb5f0;
+    --radius:14px;
+    --radius-sm:10px;
+    --shadow-sm:0 1px 2px rgba(36,21,52,.05),0 2px 8px rgba(73,16,126,.05);
+    --shadow-md:0 10px 30px rgba(73,16,126,.10);
+    --font-body:"Outfit","Segoe UI",system-ui,sans-serif;
+    --font-head:"Sora","Segoe UI",system-ui,sans-serif;
+    --warn-bg:#fff4e0;
+    --warn-line:#f0c975;
+    --warn-text:#6b4a06;
+    --stop-bg:#fdeaea;
+    --stop-text:#9c2b2b;
+    --iv-bg:#eaf3ff;
+    --iv-text:#1c4f8a;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#180f24;
+      --surface:#241634;
+      --soft:#2c1c40;
+      --soft-strong:#38254e;
+      --text:#f1ebfb;
+      --muted:#b6a4d6;
+      --primary:#b57dee;
+      --primary-strong:#cfa0f7;
+      --primary-tint:rgba(181,125,238,.14);
+      --line:#3c2a54;
+      --line-strong:#4d3568;
+      --warn-bg:#3a2c10;
+      --warn-line:#7a5c1e;
+      --warn-text:#f2ce7f;
+      --stop-bg:#3a1a1a;
+      --stop-text:#f0a3a3;
+      --iv-bg:#122a42;
+      --iv-text:#9cc7f2;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#180f24;
+    --surface:#241634;
+    --soft:#2c1c40;
+    --soft-strong:#38254e;
+    --text:#f1ebfb;
+    --muted:#b6a4d6;
+    --primary:#b57dee;
+    --primary-strong:#cfa0f7;
+    --primary-tint:rgba(181,125,238,.14);
+    --line:#3c2a54;
+    --line-strong:#4d3568;
+    --warn-bg:#3a2c10;
+    --warn-line:#7a5c1e;
+    --warn-text:#f2ce7f;
+    --stop-bg:#3a1a1a;
+    --stop-text:#f0a3a3;
+    --iv-bg:#122a42;
+    --iv-text:#9cc7f2;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:var(--font-head);text-wrap:balance;margin:0;}
+  a{color:var(--primary-strong);}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 64px;}
+
+  header.top{
+    display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between;
+    padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:22px;
+  }
+  .brand{display:flex;flex-direction:column;gap:4px;}
+  .brand .eyebrow{
+    font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);font-weight:600;
+  }
+  .brand h1{font-size:clamp(1.5rem,1.1rem + 1.4vw,2.05rem);color:var(--text);}
+  .brand p{margin:2px 0 0;color:var(--muted);font-size:.95rem;max-width:52ch;}
+  .privacy-chip{
+    display:inline-flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--line);
+    border-radius:999px;padding:8px 14px;font-size:.82rem;color:var(--muted);white-space:nowrap;
+  }
+  .privacy-chip svg{flex:none;color:var(--primary);}
+
+  .banner{
+    display:flex;gap:12px;align-items:flex-start;background:var(--warn-bg);border:1px solid var(--warn-line);
+    color:var(--warn-text);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:26px;font-size:.92rem;
+  }
+  .banner svg{flex:none;margin-top:2px;}
+  .banner strong{display:block;margin-bottom:2px;font-family:var(--font-head);font-size:.98rem;}
+
+  .layout{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:22px;align-items:start;}
+  @media (max-width:860px){.layout{grid-template-columns:1fr;}}
+
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;box-shadow:var(--shadow-sm);
+  }
+  .card + .card{margin-top:18px;}
+  .card h2{font-size:1.05rem;margin-bottom:4px;}
+  .card .sub{color:var(--muted);font-size:.85rem;margin-bottom:16px;}
+
+  .field{margin-bottom:16px;}
+  .field:last-child{margin-bottom:0;}
+  label{display:block;font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:6px;}
+  label .opt{font-weight:400;color:var(--muted);}
+  input[type="text"],input[type="number"],input[type="date"],select{
+    width:100%;padding:10px 12px;border:1px solid var(--line-strong);border-radius:var(--radius-sm);
+    background:var(--surface);color:var(--text);font-family:var(--font-body);font-size:.95rem;
+  }
+  input:focus,select:focus{outline:2px solid var(--primary);outline-offset:1px;}
+  .hint{font-size:.78rem;color:var(--muted);margin-top:5px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .divider{height:1px;background:var(--line);margin:18px 0;}
+
+  fieldset{border:none;padding:0;margin:0 0 16px;}
+  fieldset legend{font-size:.82rem;font-weight:600;margin-bottom:6px;padding:0;}
+  .iv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .iv-grid .field{margin-bottom:0;}
+  .iv-grid label{font-size:.75rem;color:var(--muted);font-weight:500;}
+
+  .custom-box{display:none;border:1px dashed var(--line-strong);border-radius:var(--radius-sm);padding:14px;margin-top:14px;background:var(--soft);}
+  .custom-box.show{display:block;}
+  .custom-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:8px;}
+  .custom-row label{font-size:.72rem;margin-bottom:4px;}
+  .icon-btn{
+    background:none;border:1px solid var(--line-strong);border-radius:8px;color:var(--muted);
+    width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .icon-btn:hover{background:var(--soft-strong);color:var(--text);}
+  .add-step{
+    display:inline-flex;align-items:center;gap:6px;background:none;border:1px dashed var(--line-strong);
+    color:var(--primary-strong);border-radius:8px;padding:8px 12px;font-size:.85rem;cursor:pointer;font-family:var(--font-body);font-weight:600;
+  }
+  .add-step:hover{background:var(--soft-strong);}
+
+  .btn{
+    appearance:none;border:none;border-radius:999px;padding:12px 22px;font-family:var(--font-body);
+    font-weight:600;font-size:.95rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:var(--shadow-sm);}
+  .btn-primary:hover{background:var(--primary-strong);}
+  .btn-ghost{background:var(--soft);color:var(--primary-strong);border:1px solid var(--line-strong);}
+  .btn-ghost:hover{background:var(--soft-strong);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
+
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
+  .stat{background:var(--soft);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px 16px;}
+  .stat .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;}
+  .stat .value{font-family:var(--font-head);font-size:1.35rem;margin-top:4px;font-variant-numeric:tabular-nums;}
+  .stat .value.small{font-size:1.05rem;}
+
+  table{width:100%;border-collapse:collapse;font-size:.9rem;}
+  thead th{
+    text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+    padding:0 10px 8px;border-bottom:1px solid var(--line);font-weight:600;
+  }
+  tbody td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  td.dose{font-variant-numeric:tabular-nums;font-weight:600;}
+  .week-badge{
+    display:inline-block;background:var(--primary-tint);color:var(--primary-strong);font-weight:600;
+    font-size:.72rem;padding:2px 8px;border-radius:999px;margin-bottom:2px;
+  }
+  tr.stop-row td{background:var(--stop-bg);color:var(--stop-text);font-weight:600;}
+  .iv-note{
+    display:inline-flex;align-items:center;gap:5px;background:var(--iv-bg);color:var(--iv-text);
+    font-size:.76rem;font-weight:600;padding:2px 8px;border-radius:999px;margin-top:4px;
+  }
+  .table-wrap{overflow-x:auto;}
+  .empty-state{color:var(--muted);font-size:.92rem;padding:30px 10px;text-align:center;}
+
+  .letter{
+    background:var(--soft);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:18px 20px;font-family:"Courier New",ui-monospace,monospace;font-size:.86rem;white-space:pre-wrap;
+    line-height:1.6;max-height:420px;overflow-y:auto;
+  }
+  .letter strong{font-weight:700;}
+
+  .foot-note{color:var(--muted);font-size:.78rem;margin-top:26px;line-height:1.6;border-top:1px solid var(--line);padding-top:16px;}
+  .foot-note p{margin:0 0 6px;}
+
+  @media print{
+    body{background:#fff;}
+    header.top .privacy-chip,.no-print{display:none !important;}
+    .layout{display:block;}
+    .card{box-shadow:none;border:1px solid #999;break-inside:avoid;}
+    .wrap{padding:0;max-width:none;}
+  }
+
+  /* ---- patient view (opened from the QR code) ---- */
+  body.patient-mode .clinician-only{display:none !important;}
+  body.patient-mode .layout{grid-template-columns:1fr;max-width:640px;margin:0 auto;}
+  body.patient-mode .stat .value{font-size:1.5rem;}
+  body.patient-mode table{font-size:1rem;}
+  body.patient-mode tbody td{padding:14px 10px;}
+
+  /* ---- QR modal ---- */
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(24,15,36,.55);display:none;align-items:center;justify-content:center;
+    padding:20px;z-index:50;
+  }
+  .modal-backdrop.show{display:flex;}
+  .modal{
+    background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-md);
+    max-width:380px;width:100%;padding:26px;text-align:center;position:relative;
+  }
+  .modal h3{font-size:1.1rem;margin-bottom:6px;}
+  .modal p{color:var(--muted);font-size:.86rem;margin:0 0 16px;line-height:1.5;}
+  .modal .qr-box{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:14px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;
+    min-height:220px;min-width:220px;
+  }
+  .modal .qr-box img,.modal .qr-box canvas{display:block;}
+  .modal .close-x{
+    position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);
+    cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;
+  }
+  .modal .close-x:hover{background:var(--soft);}
+  .modal .modal-note{
+    background:var(--soft);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:10px 12px;font-size:.78rem;color:var(--muted);text-align:left;margin-bottom:14px;
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="eyebrow">BILAG &middot; Clinical tool</span>
+      <h1>Steroid Taper Planner</h1>
+      <p>Builds a day-by-day prednisolone tapering schedule from a standard SLE / lupus nephritis regimen, or a fully custom plan.</p>
+    </div>
+    <div class="privacy-chip">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+      Runs entirely in your browser &mdash; nothing is saved or sent anywhere
+    </div>
+  </header>
+
+  <div class="banner" role="note">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.86 1.8 18a1.5 1.5 0 0 0 1.3 2.25h17.8A1.5 1.5 0 0 0 22.2 18L13.7 3.86a1.5 1.5 0 0 0-2.6 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <div>
+      <strong>For use by healthcare professionals only &mdash; this plan is a guide, not a prescription.</strong>
+      The prescribing physician is responsible for checking and confirming every dose before it is given, and doses may need to be adjusted differently to this plan depending on the patient's response. Adapted, with permission, from a glucocorticoid-tapering tool developed at Leeds Teaching Hospitals NHS Trust / University of Leeds.
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- ===== INPUT PANEL ===== -->
+    <div class="clinician-only">
+      <div class="card">
+        <h2>Regimen</h2>
+        <p class="sub">No patient name or NHS number is collected anywhere on this page &mdash; only the dates and doses below.</p>
+
+        <div class="field">
+          <label for="screenGroup">Is this taper for renal or non-renal lupus?</label>
+          <select id="screenGroup">
+            <option value="nonrenal">Non-renal (SLE flare)</option>
+            <option value="renal">Renal (lupus nephritis)</option>
+            <option value="custom">Custom / other plan</option>
+          </select>
+          <p class="hint">Narrows the regimen list below to the plans that apply.</p>
+        </div>
+
+        <div class="field">
+          <label for="startDate">Regimen start date</label>
+          <input type="date" id="startDate">
+          <p class="hint" id="startDateHint">Oral prednisolone will begin on this date.</p>
+        </div>
+
+        <div class="field">
+          <label for="regimen">Regimen</label>
+          <select id="regimen"></select>
+        </div>
+
+        <div class="field" id="weightField">
+          <label for="weight">Weight, kg <span class="opt">(needed for weight-based dosing)</span></label>
+          <input type="number" id="weight" min="1" max="300" step="0.5" placeholder="e.g. 68">
+          <p class="hint">This regimen's first two doses are calculated as mg/kg, rounded to the nearest 5&nbsp;mg, up to a fixed maximum.</p>
+        </div>
+
+        <div id="ivSection">
+          <div class="divider"></div>
+          <fieldset>
+            <legend>IV methylprednisolone given first? <span class="opt" style="font-weight:400;">(optional &mdash; delays the oral start date)</span></legend>
+            <div class="iv-grid">
+              <div class="field">
+                <label for="ivDay1">Day 1</label>
+                <select id="ivDay1"></select>
+              </div>
+              <div class="field">
+                <label for="ivDay2">Day 2</label>
+                <select id="ivDay2"></select>
+              </div>
+              <div class="field">
+                <label for="ivDay3">Day 3</label>
+                <select id="ivDay3"></select>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="custom-box" id="customBox">
+          <p class="hint" style="margin-top:0;">Build your own step-by-step taper. Each step runs for its stated number of days at a fixed daily dose. Use 0 days for a final "stop" step.</p>
+          <div id="customRows"></div>
+          <button type="button" class="add-step" id="addStep">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+            Add step
+          </button>
+        </div>
+
+        <div class="divider"></div>
+        <div class="field">
+          <label for="doctor">Completed by <span class="opt">(optional, for the clinic note)</span></label>
+          <input type="text" id="doctor" placeholder="e.g. Dr J Patel" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RESULTS PANEL ===== -->
+    <div>
+      <div class="card">
+        <h2>Tapering schedule</h2>
+        <p class="sub">Recalculates instantly as you change the fields on the left.</p>
+
+        <div class="summary-grid" id="summaryGrid"></div>
+
+        <div class="table-wrap">
+          <table id="scheduleTable">
+            <thead>
+              <tr><th>Step</th><th>Dates</th><th>Days</th><th>Daily dose</th></tr>
+            </thead>
+            <tbody id="scheduleBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="emptyState" hidden>Enter a start date (and weight, if needed) to generate the schedule.</div>
+
+        <div class="btn-row no-print">
+          <button class="btn btn-primary" id="printBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / save as PDF
+          </button>
+          <button class="btn btn-ghost" id="csvBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+            Download schedule (CSV)
+          </button>
+          <button class="btn btn-ghost clinician-only" id="qrBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM21 14v3M17 21h4M14 21v.01"/></svg>
+            Show QR for patient's phone
+          </button>
+        </div>
+      </div>
+
+      <div class="card clinician-only">
+        <h2>Copy for clinic letter / notes</h2>
+        <p class="sub">Select the text below and copy it into your documentation.</p>
+        <div class="letter" id="letterBox">Enter a start date to generate this text.</div>
+      </div>
+
+      <div class="foot-note">
+        <p>This plan is a guide only, for use within appropriate clinical governance. The prescribing physician is responsible for checking and confirming this plan; it may need to be adjusted depending on response. Weight-based doses are rounded to the nearest 5&nbsp;mg and capped at each regimen's stated maximum.</p>
+        <p>References: (1) Md Yusof MY, Smith EMD, Lythgoe H, et al. The 2026 British Society for Rheumatology guideline for the management of children, young people and adults with systemic lupus erythematosus. <em>Rheumatology (Oxford).</em> 2026;65(6):keag223. (2) Vital EM, Bertsias GK, Doria A, et al. Consensus-based guidance for glucocorticoid tapering in patients with systemic lupus erythematosus: results from a modified Delphi consensus project [abstract POS1224]. Presented at EULAR 2025; <em>Ann Rheum Dis.</em> 2025;84(Suppl&nbsp;1). Developed by Ed Vital, Leeds Teaching Hospitals NHS Trust / University of Leeds, adapted from the Steroid Tapering Communication Tool developed by Dr Sarah L Mackie. Reproduced here for BILAG with permission.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop no-print" id="qrModal">
+  <div class="modal">
+    <button class="close-x" id="qrClose" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <h3>Scan with the patient's phone</h3>
+    <p>Opens this same calculator with today's regimen, dates and doses already filled in &mdash; nothing is uploaded, the plan is encoded in the link itself.</p>
+    <div class="qr-box" id="qrBox"></div>
+    <div class="modal-note" id="qrNote"></div>
+    <p style="font-size:.78rem;color:var(--muted);margin:0 0 8px;text-align:left;">Or send the same link directly, using your own email or messaging app &mdash; nothing passes through a third-party server:</p>
+    <div class="btn-row" style="justify-content:center;margin-bottom:14px;" id="qrShareRow">
+      <a class="btn btn-ghost" id="qrEmailBtn" href="#" style="text-decoration:none;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+        Email
+      </a>
+      <a class="btn btn-ghost" id="qrSmsBtn" href="#" style="text-decoration:none;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Text message
+      </a>
+      <button class="btn btn-ghost" id="qrShareBtn" hidden>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5 15.4 17M15.4 7l-6.8 4.5"/></svg>
+        Share&hellip;
+      </button>
+    </div>
+    <button class="btn btn-ghost" id="qrCloseBtn" style="width:100%;justify-content:center;">Close</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Regimen definitions ----------
+  // Each step: {days, dose} where dose is a number (mg/day), a function(weight)->number for
+  // weight-based steps, or null for a terminal "stop / review" step. `label` overrides the
+  // auto-generated dose text for terminal steps.
+  var STOP = null;
+
+  function mround(value, multiple){
+    return Math.round(value / multiple) * multiple;
+  }
+  function wDose(factor, cap){
+    return function(w){
+      if (!(w > 0)) return NaN;
+      return Math.min(mround(factor * w, 5), cap);
+    };
+  }
+
+  var TAIL_15_STOP = [
+    {days:14, dose:15}, {days:14, dose:10}, {days:14, dose:7.5}, {days:14, dose:5},
+    {days:84, dose:2.5}, {days:0, dose:STOP, label:"Reduce below 2.5 mg daily per physician review"}
+  ];
+  var TAIL_LN_STANDARD = [
+    {days:14, dose:15}, {days:14, dose:10}, {days:14, dose:7.5}, {days:14, dose:5},
+    {days:14, dose:2.5}, {days:14, dose:2.5}, {days:14, dose:2.5}, {days:14, dose:2.5},
+    {days:28, dose:2.5}, {days:0, dose:STOP, label:"Reduce below 2.5 mg daily per physician review"}
+  ];
+  var TAIL_LN_HIGHER = [
+    {days:14, dose:20}, {days:14, dose:15}, {days:14, dose:12.5}, {days:14, dose:10},
+    {days:14, dose:7.5}, {days:14, dose:7.5}, {days:14, dose:5}, {days:14, dose:5},
+    {days:0, dose:STOP, label:"Reduce below 5 mg daily per physician review"}
+  ];
+  var TAIL_LN_EXCEPTIONAL = [
+    {days:14, dose:30}, {days:14, dose:25}, {days:14, dose:20}, {days:14, dose:15},
+    {days:14, dose:12.5}, {days:14, dose:10}, {days:14, dose:7.5}, {days:14, dose:7.5},
+    {days:28, dose:5}, {days:0, dose:STOP, label:"Reduce below 5 mg daily per physician review"}
+  ];
+
+  var REGIMENS = {
+    "Mild SLE Flare (15mg)": {
+      weightBased:false, ivOptions:null,
+      steps:[{days:7,dose:15},{days:7,dose:10},{days:7,dose:5},{days:7,dose:2.5},{days:0,dose:STOP,label:"Stop prednisolone"}]
+    },
+    "Mild SLE Flare (10mg)": {
+      weightBased:false, ivOptions:null,
+      steps:[{days:7,dose:10},{days:7,dose:5},{days:7,dose:2.5},{days:0,dose:STOP,label:"Stop prednisolone"}]
+    },
+    "Moderate SLE Flare (30mg)": {
+      weightBased:false, ivOptions:"moderate",
+      steps:[{days:7,dose:30},{days:7,dose:25},{days:14,dose:20},{days:14,dose:15},{days:14,dose:10},
+             {days:14,dose:7.5},{days:14,dose:5},{days:14,dose:2.5},{days:0,dose:STOP,label:"Stop prednisolone"}]
+    },
+    "Moderate SLE Flare (20mg)": {
+      weightBased:false, ivOptions:"moderate",
+      steps:[{days:14,dose:20},{days:14,dose:15},{days:14,dose:10},{days:14,dose:5},{days:14,dose:2.5},
+             {days:0,dose:STOP,label:"Stop prednisolone"}]
+    },
+    "Severe SLE Flare (0.5mg/kg)": {
+      weightBased:true, ivOptions:"severe",
+      steps:[{days:14,dose:wDose(0.5,40)},{days:14,dose:wDose(0.3,40)}].concat(TAIL_15_STOP)
+    },
+    "Severe SLE Flare (0.6mg/kg)": {
+      weightBased:true, ivOptions:"severe",
+      steps:[{days:14,dose:wDose(0.6,40)},{days:14,dose:wDose(0.4,40)}].concat(TAIL_15_STOP)
+    },
+    "LN Standard (0.5mg/kg)": {
+      weightBased:true, ivOptions:"severe",
+      steps:[{days:14,dose:wDose(0.5,40)},{days:14,dose:wDose(0.3,40)}].concat(TAIL_LN_STANDARD)
+    },
+    "LN Standard (0.6mg/kg)": {
+      weightBased:true, ivOptions:"severe",
+      steps:[{days:14,dose:wDose(0.6,40)},{days:14,dose:wDose(0.4,40)}].concat(TAIL_LN_STANDARD)
+    },
+    "LN Higher (0.6mg/kg)": {
+      weightBased:true, ivOptions:"severe",
+      steps:[{days:14,dose:wDose(0.6,50)},{days:14,dose:wDose(0.5,50)}].concat(TAIL_LN_HIGHER)
+    },
+    "LN Higher (0.7mg/kg)": {
+      weightBased:true, ivOptions:"severe",
+      steps:[{days:14,dose:wDose(0.7,50)},{days:14,dose:wDose(0.6,50)}].concat(TAIL_LN_HIGHER)
+    },
+    "LN Exceptional (0.8mg/kg)": {
+      weightBased:true, ivOptions:"severe",
+      steps:[{days:14,dose:wDose(0.8,80)},{days:14,dose:wDose(0.6,80)}].concat(TAIL_LN_EXCEPTIONAL)
+    },
+    "LN Exceptional (1.0mg/kg)": {
+      weightBased:true, ivOptions:"severe",
+      steps:[{days:14,dose:wDose(1.0,80)},{days:14,dose:wDose(0.7,80)}].concat(TAIL_LN_EXCEPTIONAL)
+    },
+    "Tapering off 5mg — fast": {
+      weightBased:false, ivOptions:null,
+      steps:[{days:14,dose:5},{days:14,dose:4},{days:14,dose:3},{days:14,dose:2},{days:14,dose:1},
+             {days:0,dose:STOP,label:"Stop prednisolone"}]
+    },
+    "Tapering off 5mg — slow": {
+      weightBased:false, ivOptions:null,
+      steps:[{days:30,dose:5},{days:30,dose:4},{days:30,dose:3},{days:30,dose:2},{days:30,dose:1},
+             {days:0,dose:STOP,label:"Stop prednisolone"}]
+    },
+    "Custom": { weightBased:false, ivOptions:null, steps:[] }
+  };
+  // Screening question groups: which regimens apply to renal vs non-renal lupus.
+  var REGIMEN_GROUPS = {
+    nonrenal: ["Mild SLE Flare (15mg)","Mild SLE Flare (10mg)","Moderate SLE Flare (30mg)",
+      "Moderate SLE Flare (20mg)","Severe SLE Flare (0.5mg/kg)","Severe SLE Flare (0.6mg/kg)",
+      "Tapering off 5mg — fast","Tapering off 5mg — slow"],
+    renal: ["LN Standard (0.5mg/kg)","LN Standard (0.6mg/kg)","LN Higher (0.6mg/kg)",
+      "LN Higher (0.7mg/kg)","LN Exceptional (0.8mg/kg)","LN Exceptional (1.0mg/kg)"],
+    custom: ["Custom"]
+  };
+  function groupForRegimen(regName){
+    for (var key in REGIMEN_GROUPS){
+      if (REGIMEN_GROUPS[key].indexOf(regName) !== -1) return key;
+    }
+    return "nonrenal";
+  }
+
+  var IV_OPTIONS = {
+    moderate: ["Not given","125mg","250mg","375mg","500mg"],
+    severe: ["Not given","250mg","375mg","500mg"]
+  };
+
+  // ---------- DOM refs ----------
+  var $ = function(id){ return document.getElementById(id); };
+  var regimenSel = $("regimen"), screenGroupSel = $("screenGroup"), weightField = $("weightField"), weightInput = $("weight"),
+      startDateInput = $("startDate"), startDateHint = $("startDateHint"),
+      ivSection = $("ivSection"), ivDay1 = $("ivDay1"), ivDay2 = $("ivDay2"), ivDay3 = $("ivDay3"),
+      customBox = $("customBox"), customRows = $("customRows"), addStepBtn = $("addStep"),
+      summaryGrid = $("summaryGrid"), scheduleBody = $("scheduleBody"), scheduleTable = $("scheduleTable"),
+      emptyState = $("emptyState"), letterBox = $("letterBox"),
+      doctorInput = $("doctor");
+
+  function populateRegimenOptions(group, preferred){
+    var names = REGIMEN_GROUPS[group] || REGIMEN_GROUPS.nonrenal;
+    var prev = regimenSel.value;
+    regimenSel.innerHTML = "";
+    names.forEach(function(name){
+      var o = document.createElement("option");
+      o.value = name; o.textContent = name;
+      regimenSel.appendChild(o);
+    });
+    if (preferred && names.indexOf(preferred) !== -1) regimenSel.value = preferred;
+    else if (names.indexOf(prev) !== -1) regimenSel.value = prev;
+    else regimenSel.value = names[0];
+  }
+  screenGroupSel.value = "nonrenal";
+  populateRegimenOptions("nonrenal", "Moderate SLE Flare (30mg)");
+  screenGroupSel.addEventListener("change", function(){
+    populateRegimenOptions(screenGroupSel.value);
+    render();
+  });
+
+  function fillIvSelect(sel, options, optionsKey){
+    // Rebuilding the <option> list resets the selected value, so this used to wipe out
+    // the clinician's IV dose choice every time render() ran (i.e. on every keystroke/
+    // change anywhere on the page). Only rebuild when the option set actually changes
+    // (moderate vs severe dosing), and restore the previous value afterwards.
+    if (sel.dataset.optionsKey === optionsKey) return;
+    var prev = sel.value;
+    sel.innerHTML = "";
+    options.forEach(function(v){
+      var o = document.createElement("option");
+      o.value = v; o.textContent = v;
+      sel.appendChild(o);
+    });
+    sel.dataset.optionsKey = optionsKey;
+    if (options.indexOf(prev) !== -1) sel.value = prev;
+  }
+
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  startDateInput.value = today.toISOString().slice(0,10);
+
+  // ---------- Custom regimen row builder ----------
+  var customStepCount = 0;
+  function addCustomRow(days, dose){
+    customStepCount++;
+    var row = document.createElement("div");
+    row.className = "custom-row";
+    row.innerHTML =
+      '<div><label>Step ' + customStepCount + ' &mdash; daily dose (mg)</label>' +
+      '<input type="number" step="0.5" min="0" class="c-dose" placeholder="e.g. 10"></div>' +
+      '<div><label>Days</label><input type="number" min="0" class="c-days" placeholder="e.g. 14"></div>' +
+      '<div><label>&nbsp;</label><div class="hint" style="margin-top:9px;">0 days = final step</div></div>' +
+      '<button type="button" class="icon-btn c-remove" title="Remove step" aria-label="Remove step">' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>' +
+      '</button>';
+    customRows.appendChild(row);
+    if (dose !== undefined) row.querySelector(".c-dose").value = dose;
+    if (days !== undefined) row.querySelector(".c-days").value = days;
+    row.querySelector(".c-dose").addEventListener("input", render);
+    row.querySelector(".c-days").addEventListener("input", render);
+    row.querySelector(".c-remove").addEventListener("click", function(){
+      row.remove();
+      render();
+    });
+  }
+  addStepBtn.addEventListener("click", function(){ addCustomRow(); render(); });
+  // seed with a plausible starter taper
+  addCustomRow(15, 7);
+  addCustomRow(10, 7);
+  addCustomRow(5, 7);
+  addCustomRow(0, undefined);
+  customRows.lastElementChild.querySelector(".c-dose").value = "";
+  customRows.lastElementChild.querySelector(".c-days").value = 0;
+
+  function readCustomSteps(){
+    var steps = [];
+    customRows.querySelectorAll(".custom-row").forEach(function(row){
+      var days = parseFloat(row.querySelector(".c-days").value);
+      var dose = row.querySelector(".c-dose").value;
+      if (isNaN(days)) return;
+      if (days === 0){
+        steps.push({days:0, dose:STOP, label:"Stop prednisolone"});
+      } else if (dose !== "" && !isNaN(parseFloat(dose))){
+        steps.push({days:days, dose:parseFloat(dose)});
+      }
+    });
+    return steps;
+  }
+
+  // ---------- Helpers ----------
+  var DAY_MS = 86400000;
+  function parseDate(str){
+    if (!str) return null;
+    var parts = str.split("-");
+    return new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+  }
+  function addDays(date, n){ return new Date(date.getTime() + n*DAY_MS); }
+  function fmtDate(date){
+    return date.toLocaleDateString("en-GB", {weekday:"short", day:"2-digit", month:"short", year:"numeric"});
+  }
+  function fmtDateShort(date){
+    return date.toLocaleDateString("en-GB", {day:"2-digit", month:"short", year:"numeric"});
+  }
+  function fmtDose(n){
+    if (n === null || n === undefined || isNaN(n)) return "";
+    var s = (Math.round(n*100)/100).toString();
+    return s + " mg daily";
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function ivDaysGiven(){
+    var reg = REGIMENS[regimenSel.value];
+    if (!reg.ivOptions) return 0;
+    var vals = [ivDay1.value, ivDay2.value, ivDay3.value];
+    var count = 0;
+    for (var i=0;i<3;i++){
+      if (vals[i] && vals[i] !== "Not given") count = i+1;
+    }
+    return count;
+  }
+
+  // ---------- Core render ----------
+  function render(){
+    var regName = regimenSel.value;
+    var reg = REGIMENS[regName];
+
+    // toggle weight field
+    weightField.style.display = reg.weightBased ? "" : "none";
+    // toggle IV section
+    if (reg.ivOptions){
+      ivSection.style.display = "";
+      fillIvSelect(ivDay1, IV_OPTIONS[reg.ivOptions], reg.ivOptions);
+      fillIvSelect(ivDay2, IV_OPTIONS[reg.ivOptions], reg.ivOptions);
+      fillIvSelect(ivDay3, IV_OPTIONS[reg.ivOptions], reg.ivOptions);
+    } else {
+      ivSection.style.display = "none";
+    }
+    // toggle custom box
+    customBox.classList.toggle("show", regName === "Custom");
+
+    var weight = parseFloat(weightInput.value);
+    var needsWeight = reg.weightBased;
+    var weightOk = !needsWeight || (weight > 0);
+
+    var startRaw = parseDate(startDateInput.value);
+    var ivGiven = ivDaysGiven();
+    var oralStart = startRaw ? addDays(startRaw, ivGiven) : null;
+
+    if (ivGiven > 0 && startRaw){
+      startDateHint.textContent = "IV methylprednisolone runs " + fmtDateShort(startRaw) + " to " + fmtDateShort(addDays(startRaw, ivGiven-1)) + ". Oral prednisolone starts " + fmtDateShort(oralStart) + ".";
+    } else {
+      startDateHint.textContent = "Oral prednisolone will begin on this date.";
+    }
+
+    var steps = regName === "Custom" ? readCustomSteps() : reg.steps;
+
+    // build resolved steps with dates & doses
+    var resolved = [];
+    var cursor = oralStart;
+    var totalOralDays = 0;
+    var finalDose = null;
+    var hasStop = false;
+
+    if (startRaw && weightOk){
+      steps.forEach(function(step){
+        if (!cursor) return;
+        var doseVal = typeof step.dose === "function" ? step.dose(weight) : step.dose;
+        var isStop = step.dose === STOP;
+        var from = cursor;
+        var to = step.days > 0 ? addDays(from, step.days - 1) : from;
+        resolved.push({
+          from: from, to: to, days: step.days, dose: doseVal, isStop: isStop,
+          label: step.label
+        });
+        if (step.days > 0){
+          cursor = addDays(to, 1);
+          totalOralDays += step.days;
+          if (!isStop) finalDose = doseVal;
+        } else {
+          hasStop = true;
+        }
+      });
+    }
+
+    // ---- summary tiles ----
+    summaryGrid.innerHTML = "";
+    function tile(label, value, small){
+      var d = document.createElement("div");
+      d.className = "stat";
+      d.innerHTML = '<div class="label">'+esc(label)+'</div><div class="value'+(small?' small':'')+'">'+value+'</div>';
+      summaryGrid.appendChild(d);
+    }
+    if (resolved.length){
+      tile("Regimen", esc(regName), true);
+      tile("Oral start", oralStart ? fmtDateShort(oralStart) : "&mdash;", true);
+      var lastStep = resolved[resolved.length-1];
+      tile("Ends / review", lastStep.isStop || lastStep.days===0 ? fmtDateShort(lastStep.from) : fmtDateShort(lastStep.to), true);
+      tile("Days of oral steroid", totalOralDays || "0");
+    }
+
+    // ---- schedule table ----
+    scheduleBody.innerHTML = "";
+    scheduleTable.style.display = resolved.length ? "" : "none";
+    emptyState.hidden = !!resolved.length;
+    if (!startRaw){ emptyState.hidden = false; emptyState.textContent = "Enter a start date to generate the schedule."; }
+    else if (needsWeight && !weightOk){ emptyState.hidden = false; emptyState.textContent = "Enter the patient's weight to calculate this weight-based regimen."; scheduleTable.style.display="none"; }
+
+    resolved.forEach(function(step, i){
+      var tr = document.createElement("tr");
+      if (step.isStop) tr.className = "stop-row";
+      var dateCell = step.days > 0
+        ? fmtDateShort(step.from) + " &ndash; " + fmtDateShort(step.to)
+        : "From " + fmtDateShort(step.from);
+      var doseCell = step.isStop ? esc(step.label || "Stop prednisolone") : fmtDose(step.dose);
+      tr.innerHTML =
+        "<td>" + (i+1) + "</td>" +
+        "<td>" + dateCell + "</td>" +
+        "<td>" + (step.days > 0 ? step.days : "&mdash;") + "</td>" +
+        '<td class="dose">' + doseCell + "</td>";
+      scheduleBody.appendChild(tr);
+    });
+
+    // ---- IV row annotations (shown as its own summary line above table when relevant) ----
+    var ivLine = "";
+    if (reg.ivOptions && ivGiven > 0 && startRaw){
+      var doses = [ivDay1.value, ivDay2.value, ivDay3.value].slice(0, ivGiven);
+      ivLine = doses.map(function(d, i){
+        return "IV methylprednisolone " + d + " on " + fmtDateShort(addDays(startRaw, i));
+      }).join("; ");
+    }
+
+    // ---- clinic letter ----
+    if (!startRaw || (needsWeight && !weightOk) || !resolved.length){
+      letterBox.textContent = "Enter a start date" + (needsWeight ? " and weight" : "") + " to generate this text.";
+    } else {
+      var lines = [];
+      lines.push("PREDNISOLONE TAPERING PLAN — " + regName.toUpperCase());
+      if (needsWeight) lines.push("Weight: " + weight + " kg");
+      if (ivLine) lines.push(ivLine);
+      lines.push("");
+      resolved.forEach(function(step){
+        if (step.isStop){
+          lines.push("From " + fmtDate(step.from) + ": " + (step.label || "Stop prednisolone"));
+        } else if (step.days === 0){
+          lines.push("From " + fmtDate(step.from) + ": Prednisolone " + fmtDose(step.dose));
+        } else {
+          lines.push(fmtDate(step.from) + " to " + fmtDate(step.to) + " (" + step.days + " days): Prednisolone " + fmtDose(step.dose));
+        }
+      });
+      lines.push("");
+      lines.push("This plan is a guide only. The prescribing physician is responsible for checking and confirming this plan.");
+      lines.push("This plan may need to be adjusted depending on response.");
+      lines.push("Generated by " + (doctorInput.value || "(clinician)") + ": " + fmtDateShort(today));
+      letterBox.textContent = lines.join("\n");
+    }
+
+    // stash for CSV export
+    render._lastResolved = resolved;
+    render._lastRegName = regName;
+  }
+
+  // ---------- CSV export ----------
+  var downloadsApi = null;
+  if (window.claude && typeof window.claude.use === "function"){
+    window.claude.use("downloads").then(function(d){ downloadsApi = d; }).catch(function(){ downloadsApi = null; });
+  }
+
+  function buildCsv(){
+    var resolved = render._lastResolved || [];
+    var rows = [["Step","From","To","Days","Daily dose (mg)","Note"]];
+    resolved.forEach(function(step, i){
+      rows.push([
+        i+1,
+        fmtDateShort(step.from),
+        step.days > 0 ? fmtDateShort(step.to) : "",
+        step.days,
+        step.isStop ? "" : step.dose,
+        step.isStop ? (step.label || "Stop prednisolone") : ""
+      ]);
+    });
+    return rows.map(function(r){
+      return r.map(function(v){
+        var s = String(v);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+      }).join(",");
+    }).join("\n");
+  }
+
+  async function downloadCsv(){
+    var resolved = render._lastResolved || [];
+    if (!resolved.length){ return; }
+    var fname = "steroid-taper-" + (render._lastRegName || "plan").replace(/[^\w.-]+/g,"_") + ".csv";
+    var csv = buildCsv();
+
+    // On claude.ai, use the sandboxed downloads capability (plain <a download> links
+    // are inert there). Everywhere else (GitHub Pages, a local file, any normal
+    // browser), a standard Blob + <a download> works and gives a real file save.
+    if (window.claude && typeof window.claude.use === "function"){
+      try{
+        var downloads = downloadsApi || await window.claude.use("downloads");
+        if (downloads){
+          await downloads.save({filename: fname, data: csv});
+          return;
+        }
+      } catch(e){ /* fall through below */ }
+    }
+    try{
+      var blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = fname;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    } catch(e){
+      var w = window.open("", "_blank");
+      if (w){ w.document.write("<pre>" + esc(csv) + "</pre>"); w.document.title = fname; }
+      else { window.alert("Could not download the file. Please copy the schedule from the clinic-letter box below instead."); }
+    }
+  }
+
+  // ---------- QR hand-off to the patient's phone ----------
+  // The QR code encodes a link back to this same page with the chosen regimen, start date,
+  // weight and IV days as URL parameters — the patient's phone recalculates the schedule
+  // itself from those parameters. No patient-identifying details (name/ID) are included,
+  // and nothing is uploaded or stored anywhere; the plan lives entirely in the link.
+  // The base URL is read from the page's own address at load time, so this file works
+  // unmodified wherever it's hosted (GitHub Pages, a custom domain, a local file, etc.) —
+  // there is nothing to edit here when you move or rename it.
+  var ARTIFACT_URL = window.location.href.split(/[?#]/)[0];
+
+  function buildPatientUrl(){
+    var regName = regimenSel.value;
+    var reg = REGIMENS[regName];
+    var params = new URLSearchParams();
+    params.set("patient", "1");
+    params.set("r", regName);
+    params.set("s", startDateInput.value);
+    if (reg.weightBased && weightInput.value) params.set("w", weightInput.value);
+    if (reg.ivOptions){
+      [["i1",ivDay1],["i2",ivDay2],["i3",ivDay3]].forEach(function(pair){
+        if (pair[1].value && pair[1].value !== "Not given") params.set(pair[0], pair[1].value);
+      });
+    }
+    if (regName === "Custom"){
+      var custom = readCustomSteps().map(function(s){
+        return s.dose === STOP ? "0:stop" : (s.days + ":" + s.dose);
+      }).join(",");
+      params.set("c", custom);
+    }
+    return ARTIFACT_URL + "?" + params.toString();
+  }
+
+  var qrModal = $("qrModal"), qrBox = $("qrBox"), qrNote = $("qrNote");
+  var qrEmailBtn = $("qrEmailBtn"), qrSmsBtn = $("qrSmsBtn"), qrShareBtn = $("qrShareBtn");
+  var isIOS = /iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent || "");
+
+  function shareMessageText(url){
+    var regName = regimenSel.value;
+    var lines = ["Your steroid (prednisolone) tapering plan from BILAG:", "", url, ""];
+    lines.push("This is a guide only. If you have questions or a dose looks wrong, contact your BILAG clinic team before changing anything.");
+    return lines.join("\n");
+  }
+
+  function openQrModal(){
+    if (!render._lastResolved || !render._lastResolved.length){
+      window.alert("Fill in a start date (and weight, if this regimen needs it) before generating a QR code.");
+      return;
+    }
+    var url = buildPatientUrl();
+    qrBox.innerHTML = "";
+    if (window.QRCode){
+      new QRCode(qrBox, {
+        text: url, width: 220, height: 220,
+        colorDark: "#241534", colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } else {
+      qrBox.innerHTML = '<p style="color:var(--muted);font-size:.85rem;">QR library failed to load &mdash; check your internet connection.</p>';
+    }
+    qrNote.textContent = "Link length: " + url.length + " characters. If the patient can't scan it, they can also type the short link, or you can print/CSV-export the plan instead.";
+
+    var body = shareMessageText(url);
+    qrEmailBtn.href = "mailto:?subject=" + encodeURIComponent("Your steroid tapering plan") +
+      "&body=" + encodeURIComponent(body);
+    // iOS Messages ignores "?" query separators on sms: links; Android needs "?".
+    qrSmsBtn.href = (isIOS ? "sms:&body=" : "sms:?body=") + encodeURIComponent(body);
+
+    if (navigator.share){
+      qrShareBtn.hidden = false;
+      qrShareBtn.onclick = function(){
+        navigator.share({title:"Your steroid tapering plan", text: body, url: url}).catch(function(){});
+      };
+    } else {
+      qrShareBtn.hidden = true;
+    }
+
+    qrModal.classList.add("show");
+  }
+  function closeQrModal(){ qrModal.classList.remove("show"); }
+  $("qrBtn").addEventListener("click", openQrModal);
+  $("qrClose").addEventListener("click", closeQrModal);
+  $("qrCloseBtn").addEventListener("click", closeQrModal);
+  qrModal.addEventListener("click", function(e){ if (e.target === qrModal) closeQrModal(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeQrModal(); });
+
+  // ---------- patient view (page opened FROM a scanned QR code) ----------
+  function initPatientViewIfNeeded(){
+    var params = new URLSearchParams(window.location.search);
+    if (!params.has("r")) return;
+
+    var regName = params.get("r");
+    if (REGIMENS[regName]){
+      var group = groupForRegimen(regName);
+      screenGroupSel.value = group;
+      populateRegimenOptions(group, regName);
+    }
+    if (params.has("s")) startDateInput.value = params.get("s");
+
+    // Run one render pass so the weight/IV fields exist & are populated correctly, then fill them.
+    render();
+    if (params.has("w")) weightInput.value = params.get("w");
+    if (params.has("i1")) ivDay1.value = params.get("i1");
+    if (params.has("i2")) ivDay2.value = params.get("i2");
+    if (params.has("i3")) ivDay3.value = params.get("i3");
+    if (regName === "Custom" && params.has("c")){
+      customRows.innerHTML = ""; customStepCount = 0;
+      params.get("c").split(",").forEach(function(part){
+        var bits = part.split(":");
+        if (bits[1] === "stop"){ addCustomRow(0, undefined); }
+        else { addCustomRow(parseFloat(bits[0]), parseFloat(bits[1])); }
+      });
+    }
+
+    document.body.classList.add("patient-mode");
+    document.querySelector(".brand .eyebrow").textContent = "Your BILAG steroid plan";
+    document.querySelector(".brand h1").textContent = "Your steroid taper plan";
+    document.querySelector(".brand p").textContent = "This is the tapering plan your clinic team set up for you. Follow the doses and dates below.";
+    document.querySelector(".privacy-chip").innerHTML =
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>Nothing you view here is saved or sent anywhere';
+    document.querySelector(".banner div").innerHTML =
+      "<strong>This plan is a guide, not a substitute for medical advice.</strong> " +
+      "Take the doses exactly as your clinic team explained. If you feel unwell, have questions, or think a dose looks wrong, contact your BILAG clinic team before changing anything.";
+    var printBtn = $("printBtn");
+    printBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Save / print this plan';
+
+    render();
+  }
+
+  // ---------- wire up ----------
+  [regimenSel, weightInput, startDateInput, ivDay1, ivDay2, ivDay3, doctorInput]
+    .forEach(function(el){ el.addEventListener("input", render); el.addEventListener("change", render); });
+  $("printBtn").addEventListener("click", function(){ window.print(); });
+  $("csvBtn").addEventListener("click", downloadCsv);
+
+  render();
+  initPatientViewIfNeeded();
+})();
+</script>
