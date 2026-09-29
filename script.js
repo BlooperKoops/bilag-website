@@ -295,7 +295,7 @@ const initMemberMap=()=>{
     };
 
     try{
-      const res=await fetch("./assets/bilag-members.json",{headers:{"Accept":"application/json"}});
+      const res=await fetch("./assets/bilag-members.json?v=20260929",{headers:{"Accept":"application/json"},cache:"no-store"});
       if(!res.ok) throw new Error("members file not found");
       const parsed=await res.json();
       if(!Array.isArray(parsed)) throw new Error("invalid members format");
@@ -655,7 +655,7 @@ const initTrialMap=()=>{
       ])
     ).values());
     try{
-      const res=await fetch("./assets/bilag-members.json",{headers:{"Accept":"application/json"}});
+      const res=await fetch("./assets/bilag-members.json?v=20260929",{headers:{"Accept":"application/json"},cache:"no-store"});
       if(!res.ok) throw new Error("members file not found");
       const members=await res.json();
       if(!Array.isArray(members)) throw new Error("invalid members format");
