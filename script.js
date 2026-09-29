@@ -134,7 +134,8 @@ const initMemberMap=()=>{
     "chris wincup":"./assets/Dr_Chris_Wincup.png",
     "md yuzaiful md yusof":"./assets/yuz yusof.jpg",
     "antony psarras":"./assets/Antony.Psarras.webp",
-    "bridget griffiths":"./assets/Bridget griffiths.jpeg"
+    "bridget griffiths":"./assets/Bridget griffiths.jpeg",
+    "michael ehrenstein":"./assets/mike-ehrenstein.png"
   };
 
   const fallbackMembers=[
@@ -374,7 +375,7 @@ const initTrialMap=()=>{
 
   const activeTrials=[
     {name:"FIRST Trial",phase:"Randomised controlled trial",status:"Recruiting",hospital:"Leeds Teaching Hospitals",city:"Leeds",lat:53.8008,lng:-1.5491,aim:"To evaluate first-line rituximab-based treatment pathways in active SLE.",criteria:"Adults with active SLE requiring systemic immunosuppressive escalation; standard safety screening required.",agents:"Rituximab-based regimen compared with current standard first-line escalation strategy.",logo:"./assets/university-of-leeds.png",logoAlt:"University of Leeds",institutionLabel:"Coordinating institution",institutionName:"University of Leeds",locationLabel:"Coordinating centre"},
-    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,aim:"To test biomarker-stratified treatment sequencing in moderate-to-severe lupus.",criteria:"Adults with serologically active SLE and disease features suitable for biologic treatment stratification.",agents:"Rituximab plus belimumab combination strategy versus biomarker-guided comparator arms.",logo:"./assets/UCL Logo.png",logoAlt:"UCL",institutionLabel:"Coordinating institution",institutionName:"University College London",locationLabel:"Coordinating centre"}
+    {name:"STRATIFY-LUPUS",phase:"Biomarker-stratified trial",status:"Recruiting",hospital:"University College London Hospital",city:"London",lat:51.5072,lng:-0.1276,aim:"To evaluate whether a serum biomarker can identify patients with SLE most likely to benefit from belimumab following B cell depletion therapy (rituximab).",criteria:"Adults with moderate-to-severe SLE and planned rituximab (the biomarker assay will be performed at UCL but will not delay rituximab treatment).",agents:"Rituximab followed by belimumab versus rituximab followed by placebo.",logo:"./assets/UCL Logo.png",logoAlt:"UCL",trialLogo:"./assets/stratify-lupus-logo.png",trialLogoAlt:"STRATIFY lupus",institutionLabel:"Coordinating institution",institutionName:"University College London",locationLabel:"Coordinating centre"}
   ];
 
   const regionalHubs=[
@@ -621,10 +622,14 @@ const initTrialMap=()=>{
     state.activeTrials.forEach((site)=>{
       const card=document.createElement("article");
       card.className="card trial-summary";
+      const trialLogo=(site.trialLogo)
+        ?`<img src="${site.trialLogo}" alt="${site.trialLogoAlt||site.name} logo" class="trial-logo-mini">`
+        :"";
       const summaryLogo=(site.logo)
         ?`<img src="${site.logo}" alt="${site.logoAlt||"Trial partner"} logo" class="trial-logo-mini">`
         :"";
-      card.innerHTML=`<h3 class="trial-title-row">${site.name}${summaryLogo?` ${summaryLogo}`:""}</h3><p><strong>Active members:</strong> ${site.memberCount??0}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial agents:</strong> ${site.agents}</p>`;
+      const logos=`${trialLogo}${summaryLogo}`;
+      card.innerHTML=`<h3 class="trial-title-row">${site.name}${logos?` ${logos}`:""}</h3><p><strong>Active members:</strong> ${site.memberCount??0}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial treatment:</strong> ${site.agents}</p>`;
       summaries.appendChild(card);
     });
   };
