@@ -362,10 +362,16 @@ body[data-show-beta-warning="false"] .site-warning-banner{display:none}
 .card.trial-summary{box-shadow:none;background:#fbf9ff;padding:1.1rem 1.2rem}
 .trial-summary p{margin:.3rem 0;font-size:.92rem;color:var(--muted)}
 .trial-summary p strong{color:var(--text)}
-.trial-title-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem}
-.trial-logo-mini{
-  height:22px;width:auto;max-width:80px;object-fit:contain;
-  border:1px solid var(--line);border-radius:6px;background:#fff;padding:2px 5px;
+.trial-title-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;margin-bottom:.5rem;
+}
+.trial-logo{
+  height:56px;width:auto;max-width:180px;object-fit:contain;flex:0 0 auto;
+}
+@media (max-width:480px){
+  .trial-title-row{justify-content:flex-start}
+  .trial-logo{height:44px;max-width:140px}
 }
 
 /* --------------------------------------------------------------------------

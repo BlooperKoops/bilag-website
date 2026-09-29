@@ -295,7 +295,7 @@ const initMemberMap=()=>{
     };
 
     try{
-      const res=await fetch("./assets/bilag-members.json?v=20260929",{headers:{"Accept":"application/json"},cache:"no-store"});
+      const res=await fetch("./assets/bilag-members.json?v=20260929c",{headers:{"Accept":"application/json"},cache:"no-store"});
       if(!res.ok) throw new Error("members file not found");
       const parsed=await res.json();
       if(!Array.isArray(parsed)) throw new Error("invalid members format");
@@ -623,13 +623,12 @@ const initTrialMap=()=>{
       const card=document.createElement("article");
       card.className="card trial-summary";
       const trialLogo=(site.trialLogo)
-        ?`<img src="${site.trialLogo}" alt="${site.trialLogoAlt||site.name} logo" class="trial-logo-mini">`
+        ?`<img src="${site.trialLogo}" alt="${site.trialLogoAlt||site.name} logo" class="trial-logo">`
         :"";
-      const summaryLogo=(site.logo)
-        ?`<img src="${site.logo}" alt="${site.logoAlt||"Trial partner"} logo" class="trial-logo-mini">`
+      const institutionLine=(site.institutionName)
+        ?`<p><strong>${site.institutionLabel||"Institution"}:</strong> ${site.institutionName}</p>`
         :"";
-      const logos=`${trialLogo}${summaryLogo}`;
-      card.innerHTML=`<h3 class="trial-title-row">${site.name}${logos?` ${logos}`:""}</h3><p><strong>Active members:</strong> ${site.memberCount??0}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial treatment:</strong> ${site.agents}</p>`;
+      card.innerHTML=`<h3 class="trial-title-row"><span>${site.name}</span>${trialLogo}</h3>${institutionLine}<p><strong>Active members:</strong> ${site.memberCount??0}</p><p><strong>Aim:</strong> ${site.aim}</p><p><strong>Recruitment criteria:</strong> ${site.criteria}</p><p><strong>Trial treatment:</strong> ${site.agents}</p>`;
       summaries.appendChild(card);
     });
   };
@@ -655,7 +654,7 @@ const initTrialMap=()=>{
       ])
     ).values());
     try{
-      const res=await fetch("./assets/bilag-members.json?v=20260929",{headers:{"Accept":"application/json"},cache:"no-store"});
+      const res=await fetch("./assets/bilag-members.json?v=20260929c",{headers:{"Accept":"application/json"},cache:"no-store"});
       if(!res.ok) throw new Error("members file not found");
       const members=await res.json();
       if(!Array.isArray(members)) throw new Error("invalid members format");
