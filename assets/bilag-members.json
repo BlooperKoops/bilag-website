@@ -1,11 +1,11 @@
 [
   {
-    "name": "Prof. Edward Vital",
-    "role": "BILAG Chair",
-    "hospital": "University of Leeds",
-    "city": "Leeds",
-    "lat": 53.8067,
-    "lng": -1.555,
+    "name": "Dr. Yasmeen Ahmad",
+    "role": "BILAG Member",
+    "hospital": "Wales NHS",
+    "city": "Cardiff",
+    "lat": 51.4816,
+    "lng": -3.1791,
     "photo": ""
   },
   {
@@ -15,15 +15,6 @@
     "city": "Leeds",
     "lat": 53.8067,
     "lng": -1.555,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Yasmeen Ahmad",
-    "role": "BILAG Member",
-    "hospital": "Wales NHS",
-    "city": "Cardiff",
-    "lat": 51.4816,
-    "lng": -3.1791,
     "photo": ""
   },
   {
@@ -63,21 +54,21 @@
     "photo": ""
   },
   {
-    "name": "Dr. Shouvik Dass",
-    "role": "BILAG Member",
-    "hospital": "University of Leeds",
-    "city": "Leeds",
-    "lat": 53.8008,
-    "lng": -1.5491,
-    "photo": ""
-  },
-  {
     "name": "Prof. David D'Cruz",
     "role": "BILAG Member",
     "hospital": "Guy's and St Thomas' Hospital",
     "city": "London",
     "lat": 51.498,
     "lng": -0.1187,
+    "photo": ""
+  },
+  {
+    "name": "Dr. Shouvik Dass",
+    "role": "BILAG Member",
+    "hospital": "University of Leeds",
+    "city": "Leeds",
+    "lat": 53.8008,
+    "lng": -1.5491,
     "photo": ""
   },
   {
@@ -126,6 +117,15 @@
     "photo": ""
   },
   {
+    "name": "Prof. Caroline Gordon",
+    "role": "BILAG Member",
+    "hospital": "University of Birmingham",
+    "city": "Birmingham",
+    "lat": 52.4862,
+    "lng": -1.8904,
+    "photo": ""
+  },
+  {
     "name": "Prof. Mohini Gray",
     "role": "BILAG Member",
     "hospital": "University of Edinburgh",
@@ -135,12 +135,21 @@
     "photo": ""
   },
   {
-    "name": "Prof. Caroline Gordon",
+    "name": "Dr. Bridget Griffiths",
     "role": "BILAG Member",
-    "hospital": "University of Birmingham",
-    "city": "Birmingham",
-    "lat": 52.4862,
-    "lng": -1.8904,
+    "hospital": "Newcastle upon Tyne Hospitals NHS Foundation Trust",
+    "city": "Newcastle upon Tyne",
+    "lat": 54.9783,
+    "lng": -1.6178,
+    "photo": "./assets/Bridget griffiths.jpeg"
+  },
+  {
+    "name": "Dr. Helen Harris",
+    "role": "BILAG Member",
+    "hospital": "NHS Lothian",
+    "city": "Edinburgh",
+    "lat": 55.9533,
+    "lng": -3.1883,
     "photo": ""
   },
   {
@@ -243,15 +252,6 @@
     "photo": ""
   },
   {
-    "name": "Dr. Mia Rodziewicz",
-    "role": "BILAG Member",
-    "hospital": "University of Manchester",
-    "city": "Manchester",
-    "lat": 53.4808,
-    "lng": -2.2426,
-    "photo": ""
-  },
-  {
     "name": "Dr. Ben Rhodes",
     "role": "BILAG Member",
     "hospital": "University Hospitals Birmingham",
@@ -276,6 +276,24 @@
     "city": "Belfast",
     "lat": 54.5973,
     "lng": -5.9301,
+    "photo": ""
+  },
+  {
+    "name": "Dr. Mia Rodziewicz",
+    "role": "BILAG Member",
+    "hospital": "University of Manchester",
+    "city": "Manchester",
+    "lat": 53.4808,
+    "lng": -2.2426,
+    "photo": ""
+  },
+  {
+    "name": "Dr. Megan Rutter",
+    "role": "BILAG Member",
+    "hospital": "Sandwell and West Birmingham Hospitals NHS Trust",
+    "city": "Birmingham",
+    "lat": 52.4862,
+    "lng": -1.8904,
     "photo": ""
   },
   {
@@ -324,12 +342,30 @@
     "photo": ""
   },
   {
+    "name": "Prof. Edward Vital",
+    "role": "BILAG Chair",
+    "hospital": "University of Leeds",
+    "city": "Leeds",
+    "lat": 53.8067,
+    "lng": -1.555,
+    "photo": ""
+  },
+  {
     "name": "Dr. Chris Wincup",
     "role": "BILAG Member",
     "hospital": "King's College London",
     "city": "London",
     "lat": 51.5072,
     "lng": -0.1276,
+    "photo": ""
+  },
+  {
+    "name": "Dr. Chee-Seng Yee",
+    "role": "BILAG Member",
+    "hospital": "Doncaster and Bassetlaw NHS Foundation Trust",
+    "city": "Doncaster",
+    "lat": 53.5228,
+    "lng": -1.1285,
     "photo": ""
   },
   {
@@ -342,39 +378,12 @@
     "photo": ""
   },
   {
-    "name": "Dr. Bridget Griffiths",
+    "name": "Dr. Asad Zoma",
     "role": "BILAG Member",
-    "hospital": "Newcastle upon Tyne Hospitals NHS Foundation Trust",
-    "city": "Newcastle upon Tyne",
-    "lat": 54.9783,
-    "lng": -1.6178,
-    "photo": "./assets/Bridget griffiths.jpeg"
-  },
-  {
-    "name": "Dr. Chee-Seng Yee",
-    "role": "BILAG Member",
-    "hospital": "Doncaster and Bassetlaw NHS Foundation Trust",
-    "city": "Doncaster",
-    "lat": 53.5228,
-    "lng": -1.1285,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Helen Harris",
-    "role": "BILAG Member",
-    "hospital": "NHS Lothian",
-    "city": "Edinburgh",
-    "lat": 55.9533,
-    "lng": -3.1883,
-    "photo": ""
-  },
-  {
-    "name": "Dr. Megan Rutter",
-    "role": "BILAG Member",
-    "hospital": "Sandwell and West Birmingham Hospitals NHS Trust",
-    "city": "Birmingham",
-    "lat": 52.4862,
-    "lng": -1.8904,
+    "hospital": "NHS Lanarkshire",
+    "city": "Hamilton",
+    "lat": 55.7781,
+    "lng": -4.0361,
     "photo": ""
   }
 ]
