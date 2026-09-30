@@ -295,7 +295,7 @@ const initMemberMap=()=>{
     };
 
     try{
-      const res=await fetch("./assets/bilag-members.json?v=20260929c",{headers:{"Accept":"application/json"},cache:"no-store"});
+      const res=await fetch("./assets/bilag-members.json?v=20260930",{headers:{"Accept":"application/json"},cache:"no-store"});
       if(!res.ok) throw new Error("members file not found");
       const parsed=await res.json();
       if(!Array.isArray(parsed)) throw new Error("invalid members format");
@@ -654,7 +654,7 @@ const initTrialMap=()=>{
       ])
     ).values());
     try{
-      const res=await fetch("./assets/bilag-members.json?v=20260929c",{headers:{"Accept":"application/json"},cache:"no-store"});
+      const res=await fetch("./assets/bilag-members.json?v=20260930",{headers:{"Accept":"application/json"},cache:"no-store"});
       if(!res.ok) throw new Error("members file not found");
       const members=await res.json();
       if(!Array.isArray(members)) throw new Error("invalid members format");
@@ -810,6 +810,20 @@ if(publicationList){
       authors:"Sarah Dyball et al.",
       journal:"Lupus Science & Medicine",
       date:"2021 Jul"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/20181671/",
+      title:"Numerical scoring for the BILAG-2004 index",
+      authors:"Chee-Seng Yee et al.",
+      journal:"Rheumatology (Oxford)",
+      date:"2010 Sep"
+    },
+    {
+      url:"https://pubmed.ncbi.nlm.nih.gov/19395542/",
+      title:"The BILAG-2004 index is sensitive to change for assessment of SLE disease activity",
+      authors:"Chee-Seng Yee et al.",
+      journal:"Rheumatology (Oxford)",
+      date:"2009 Jun"
     }
   ];
 
