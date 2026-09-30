@@ -265,6 +265,12 @@ nav{display:flex;align-items:center}
 .br-logo-compact{max-width:220px}
 .eb-hero-layout{display:grid;grid-template-columns:1.2fr minmax(180px,240px);gap:2rem;align-items:center}
 .eb-hero-layout .btn{margin-top:.4rem}
+.event-flyer-layout{align-items:start}
+.event-flyer-img{
+  max-width:220px;width:100%;height:auto;display:block;object-fit:contain;
+  border-radius:var(--radius-sm);border:1px solid var(--line);
+  box-shadow:0 4px 14px rgba(31,15,64,.12);
+}
 .eb-logo-link{
   display:flex;align-items:center;justify-content:center;
   padding:.75rem;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff;overflow:hidden;
